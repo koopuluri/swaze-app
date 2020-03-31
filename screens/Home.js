@@ -16,7 +16,7 @@ class Home extends Component {
       .onSnapshot(querySnapshot => {
         var sessions = [];
         querySnapshot.forEach(function(doc) {
-          sessions.push(doc.data());
+          sessions.push(doc);
         });
         this.setState({sessions: sessions});
       });
@@ -40,8 +40,10 @@ class Home extends Component {
           sections={[{title: 'Upcoming', data: this.state.sessions}]}
           renderItem={sesh => (
             <SessionListItem
-              onPress={() => this.props.navigation.navigate('Session')}
-              session={sesh.item}
+              onPress={() => {
+                this.props.navigation.navigate('Session', {id: sesh.item.id});
+              }}
+              session={sesh.item.data()}
             />
           )}
           renderSectionHeader={({section}) => (

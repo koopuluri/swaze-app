@@ -122,8 +122,33 @@ class App extends Component {
               )}
             </Stack.Screen>
             <Stack.Screen name="Settings" component={Settings} />
-            <Stack.Screen name="Session" component={Session} />
-            <Stack.Screen name="Create Session" component={CreateSession} />
+            <Stack.Screen name="Create Session">
+              {props => (
+                <CreateSession
+                  {...props}
+                  db={db}
+                  user={{id: firebaseUser.uid, ...this.state.currentUser}}
+                />
+              )}
+            </Stack.Screen>
+            <Stack.Screen
+              name="Session"
+              options={({navigation, route}) => ({
+                headerRight: () => (
+                  <Button
+                    title="Edit"
+                    onPress={() => navigation.navigate('Create Session')}
+                  />
+                ),
+              })}>
+              {props => (
+                <Session
+                  {...props}
+                  db={db}
+                  user={{id: firebaseUser.uid, ...this.state.currentUser}}
+                />
+              )}
+            </Stack.Screen>
           </Stack.Navigator>
         )}
       </NavigationContainer>
