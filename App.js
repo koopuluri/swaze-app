@@ -8,8 +8,16 @@
 
 import React, {Component} from 'react';
 import {View, Button, Linking, ActivityIndicator} from 'react-native';
-import LoginPage from './pages/Login';
-import Home from './pages/Home';
+import LoginPage from './screens/Login';
+import Home from './screens/Home';
+import Settings from './screens/Settings';
+import Session from './screens/Session';
+import CreateSession from './screens/CreateSession';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
+
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
@@ -61,7 +69,6 @@ class App extends Component {
       .get();
     if (doc.exists)
       return this.setState({currentUser: doc.data(), isLoading: false});
-    console.log('could not fetch user? ', id);
     this.setState({isLoading: false});
   };
 
@@ -71,12 +78,8 @@ class App extends Component {
 
     firebase.auth().onAuthStateChanged(async user => {
       if (user) {
-        console.log('we now have a signed in user!!!');
-        console.log('pulling the user from the user id: ', user.uid);
-        // Pull the user and set it to the state:
         this.fetchAndSetCurrentUser();
       } else {
-        // No user is signed in.
       }
     });
   };
@@ -88,13 +91,44 @@ class App extends Component {
       console.log('error signing in with custom token: ', e);
     }
   };
+
   render() {
+    let db = firebase.firestore();
     if (this.state.isLoading) return <LoadingSpinner />;
-    if (!firebase.auth().currentUser) {
-      return <LoginPage />;
-    } else {
-      return <Home user={this.state.currentUser} />;
-    }
+    let firebaseUser = firebase.auth().currentUser;
+    return (
+      <NavigationContainer>
+        {!firebaseUser ? (
+          <LoginPage />
+        ) : (
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Home"
+              options={({navigation, route}) => ({
+                title: 'Sessions',
+                headerRight: () => (
+                  <Button
+                    title="Settings"
+                    onPress={() => navigation.navigate('Settings')}
+                  />
+                ),
+              })}>
+              {props => (
+                <Home
+                  {...props}
+                  db={db}
+                  user={{id: firebaseUser.uid, ...this.state.currentUser}}
+                />
+              )}
+            </Stack.Screen>
+            <Stack.Screen name="Settings" component={Settings} />
+            <Stack.Screen name="Session" component={Session} />
+            <Stack.Screen name="Create Session" component={CreateSession} />
+          </Stack.Navigator>
+        )}
+      </NavigationContainer>
+    );
   }
 }
+
 export default App;
