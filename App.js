@@ -16,7 +16,8 @@ import CreateSession from './screens/CreateSession';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-const Stack = createStackNavigator();
+const MainStack = createStackNavigator();
+const RootStack = createStackNavigator();
 
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
@@ -92,65 +93,88 @@ class App extends Component {
     }
   };
 
+  getMainStack = (firebaseUser, db) => () => (
+    <MainStack.Navigator>
+      <MainStack.Screen
+        name="Home"
+        options={({navigation, route}) => ({
+          title: 'Sessions',
+          headerRight: () => (
+            <Button
+              title="Settings"
+              onPress={() => navigation.navigate('Settings')}
+            />
+          ),
+        })}>
+        {props => (
+          <Home
+            {...props}
+            db={db}
+            user={{id: firebaseUser.uid, ...this.state.currentUser}}
+          />
+        )}
+      </MainStack.Screen>
+      <MainStack.Screen name="Settings" component={Settings} />
+      <MainStack.Screen
+        name="Session"
+        options={({navigation, route}) => ({
+          headerRight: () => (
+            <Button
+              title="Edit"
+              onPress={() => navigation.navigate('Create Session')}
+            />
+          ),
+        })}>
+        {props => (
+          <Session
+            {...props}
+            db={db}
+            user={{id: firebaseUser.uid, ...this.state.currentUser}}
+          />
+        )}
+      </MainStack.Screen>
+    </MainStack.Navigator>
+  );
+
+  getNavigator = (firebaseUser, db) => {
+    let MainStack = this.getMainStack(firebaseUser, db);
+    return (
+      <RootStack.Navigator mode="modal">
+        <RootStack.Screen
+          name="Main"
+          component={MainStack}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen name="Create Session">
+          {props => (
+            <CreateSession
+              {...props}
+              db={db}
+              user={{id: firebaseUser.uid, ...this.state.currentUser}}
+            />
+          )}
+        </RootStack.Screen>
+        <RootStack.Screen name="Edit Session">
+          {props => (
+            <CreateSession
+              {...props}
+              mode="edit"
+              db={db}
+              user={{id: firebaseUser.uid, ...this.state.currentUser}}
+            />
+          )}
+        </RootStack.Screen>
+      </RootStack.Navigator>
+    );
+  };
+
   render() {
     let db = firebase.firestore();
     if (this.state.isLoading) return <LoadingSpinner />;
     let firebaseUser = firebase.auth().currentUser;
     return (
       <NavigationContainer>
-        {!firebaseUser ? (
-          <LoginPage />
-        ) : (
-          <Stack.Navigator>
-            <Stack.Screen
-              name="Home"
-              options={({navigation, route}) => ({
-                title: 'Sessions',
-                headerRight: () => (
-                  <Button
-                    title="Settings"
-                    onPress={() => navigation.navigate('Settings')}
-                  />
-                ),
-              })}>
-              {props => (
-                <Home
-                  {...props}
-                  db={db}
-                  user={{id: firebaseUser.uid, ...this.state.currentUser}}
-                />
-              )}
-            </Stack.Screen>
-            <Stack.Screen name="Settings" component={Settings} />
-            <Stack.Screen name="Create Session">
-              {props => (
-                <CreateSession
-                  {...props}
-                  db={db}
-                  user={{id: firebaseUser.uid, ...this.state.currentUser}}
-                />
-              )}
-            </Stack.Screen>
-            <Stack.Screen
-              name="Session"
-              options={({navigation, route}) => ({
-                headerRight: () => (
-                  <Button
-                    title="Edit"
-                    onPress={() => navigation.navigate('Create Session')}
-                  />
-                ),
-              })}>
-              {props => (
-                <Session
-                  {...props}
-                  db={db}
-                  user={{id: firebaseUser.uid, ...this.state.currentUser}}
-                />
-              )}
-            </Stack.Screen>
-          </Stack.Navigator>
-        )}
+        {!firebaseUser ? <LoginPage /> : this.getNavigator(firebaseUser, db)}
       </NavigationContainer>
     );
   }
