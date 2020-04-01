@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 import {View, Text, Button, SectionList, StyleSheet} from 'react-native';
 import SessionListItem from '../components/SessionListItem';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 class Home extends Component {
   state = {
     sessions: [],
     unsubscribeListener: null,
+    isLoading: true,
   };
 
   componentDidMount() {
@@ -18,7 +20,7 @@ class Home extends Component {
         querySnapshot.forEach(function(doc) {
           sessions.push(doc);
         });
-        this.setState({sessions: sessions});
+        this.setState({sessions: sessions, isLoading: false});
       });
 
     this.setState({unsubscribeListener: unsubscribe});
@@ -30,6 +32,7 @@ class Home extends Component {
 
   render() {
     if (!this.props.user) return null;
+    if (this.state.isLoading) return <LoadingSpinner />;
     return (
       <View style={styles.container}>
         <Button

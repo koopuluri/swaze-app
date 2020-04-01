@@ -121,7 +121,9 @@ class App extends Component {
           headerRight: () => (
             <Button
               title="Edit"
-              onPress={() => navigation.navigate('Create Session')}
+              onPress={() =>
+                navigation.navigate('Edit Session', {id: route.params.id})
+              }
             />
           ),
         })}>
@@ -158,7 +160,7 @@ class App extends Component {
           {props => (
             <CreateSession
               {...props}
-              mode="edit"
+              isEditMode={true}
               db={db}
               user={{id: firebaseUser.uid, ...this.state.currentUser}}
             />

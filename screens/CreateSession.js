@@ -20,6 +20,28 @@ class CreateSession extends Component {
     isDatePickerVisible: false,
   };
 
+  componentDidMount = async () => {
+    let {route, isEditMode, db} = this.props;
+    if (isEditMode) {
+      let id = route.params.id;
+      // pull the session from FireStore:
+      this.setState({isPageLoading: true});
+      let doc = await db
+        .collection('sessions')
+        .doc(id)
+        .get();
+      let session = doc.data();
+      this.setState({
+        isPageLoading: false,
+        title: session.title,
+        description: session.description,
+        startTime: new Date(session.startTime.seconds * 1000),
+        price: session.price,
+        totalAttendees: session.totalAttendees,
+      });
+    }
+  };
+
   validate = () => {
     let errors = {};
     let {title, description, startTime} = this.state;
@@ -31,6 +53,11 @@ class CreateSession extends Component {
   };
 
   submit = async () => {
+    if (this.props.isEditMode) return this.save();
+    return this.create();
+  };
+
+  create = async () => {
     // Creating a session in FireStore:
     let {title, description, startTime, price} = this.state;
     if (title && description && startTime) {
@@ -58,6 +85,30 @@ class CreateSession extends Component {
     }
   };
 
+  save = async () => {
+    let {title, description, startTime, price} = this.state;
+    let {db, navigation, route} = this.props;
+    try {
+      this.setState({isLoading: true});
+      let saved = await db
+        .collection('sessions')
+        .doc(route.params.id)
+        .set(
+          {
+            title: title,
+            description: description,
+            startTime: startTime,
+            price: price,
+          },
+          {merge: true},
+        );
+      navigation.navigate('Session');
+    } catch (e) {
+      console.log('error saving: ', e);
+      this.setState({title: 'ERROR SAVING! ' + e.message, isLoading: false});
+    }
+  };
+
   render() {
     let {
       title,
@@ -66,8 +117,16 @@ class CreateSession extends Component {
       price,
       startTime,
       errors,
+      isPageLoading,
       isLoading,
+      totalAttendees,
     } = this.state;
+
+    let {isEditMode} = this.props;
+    let canChangePrice = true;
+    if (isEditMode && totalAttendees > 0) canChangePrice = false;
+
+    if (isPageLoading) return <LoadingSpinner />;
     return (
       <View style={styles.container}>
         <View style={styles.formSection}>
@@ -92,9 +151,9 @@ class CreateSession extends Component {
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
             mode="datetime"
-            onConfirm={val =>
-              this.setState({startTime: val, isDatePickerVisible: false})
-            }
+            onConfirm={val => {
+              this.setState({startTime: val, isDatePickerVisible: false});
+            }}
             onCancel={() => this.setState({isDatePickerVisible: false})}
           />
           {errors.startTime ? (
@@ -119,14 +178,22 @@ class CreateSession extends Component {
 
         <View style={styles.formSection}>
           <Text style={styles.title}>Session price</Text>
+          {!canChangePrice ? (
+            <Text style={styles.priceMessage}>
+              An attendee has already signed up, therefore you can't change the
+              price. If you'd wish to cancel this session reach out to us and
+              we'll help you process refunds.
+            </Text>
+          ) : null}
           <Slider
+            disabled={!canChangePrice}
             step={1}
             minimumValue={0}
             maximumValue={100}
             value={price / 5 - 1}
-            onValueChange={priceIndex =>
-              this.setState({price: priceIndex * 5 + 5})
-            }
+            onValueChange={priceIndex => {
+              if (canChangePrice) this.setState({price: priceIndex * 5 + 5});
+            }}
             minimumTrackTintColor="#1fb28a"
             maximumTrackTintColor="#d3d3d3"
             thumbTintColor="#b9e4c9"
@@ -134,7 +201,7 @@ class CreateSession extends Component {
           <Text style={styles.price}>${price}</Text>
         </View>
         {!isLoading ? (
-          <Button title="Create session" onPress={() => this.submit()} />
+          <Button title="Save" onPress={() => this.submit()} />
         ) : (
           <LoadingSpinner />
         )}
@@ -144,6 +211,10 @@ class CreateSession extends Component {
 }
 
 const styles = StyleSheet.create({
+  priceMessage: {
+    marginLeft: 10,
+    marginTop: 5,
+  },
   container: {
     height: '100%',
     padding: 20,

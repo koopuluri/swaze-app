@@ -5,7 +5,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 
 class Session extends Component {
   state = {
-    isLoading: false,
+    isLoading: true,
     session: null,
     error: '',
   };
@@ -13,7 +13,12 @@ class Session extends Component {
   componentDidMount = async () => {
     let {db} = this.props;
     let id = this.props.route.params.id;
-    this.setState({isLoading: true});
+    db.collection('sessions')
+      .doc(id)
+      .onSnapshot(doc =>
+        this.setState({session: doc.data(), isLoading: false}),
+      );
+
     try {
       let doc = await db
         .collection('sessions')
