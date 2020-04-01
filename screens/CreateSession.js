@@ -45,10 +45,11 @@ class CreateSession extends Component {
   validate = () => {
     let errors = {};
     let {title, description, startTime} = this.state;
-    if (!title) errors.title = 'Please set a title for your session.';
-    if (!description) errors.description = 'Please set a description.';
+    if (!title) errors.title = 'Please choose a title.';
+    if (!description)
+      errors.description = 'Please describe your class to your audience.';
     if (!startTime)
-      errors.startTime = 'Please pick a start time for your session';
+      errors.startTime = 'Please pick a valid start time for your session';
     this.setState({errors: errors});
   };
 
@@ -157,9 +158,7 @@ class CreateSession extends Component {
             onCancel={() => this.setState({isDatePickerVisible: false})}
           />
           {errors.startTime ? (
-            <Text style={styles.errorMessage}>
-              Set a start time for your session.
-            </Text>
+            <Text style={styles.errorMessage}>{errors.startTime}</Text>
           ) : null}
         </View>
 

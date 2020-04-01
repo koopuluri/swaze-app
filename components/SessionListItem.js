@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {TouchableHighlight} from 'react-native-gesture-handler';
+import moment from 'moment';
 
 export default function SessionListItem(props) {
   let {session} = props;
@@ -18,8 +19,12 @@ export default function SessionListItem(props) {
         </View>
         <View style={styles.row}>
           <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
-            <Text style={styles.startTime}>{session.startTime.seconds}</Text>
-            <Text style={styles.price}>{'$' + session.price}</Text>
+            <Text style={styles.startTime}>
+              {moment(new Date(session.startTime.seconds * 1000)).format(
+                'MMMM D, h:mm a',
+              )}
+            </Text>
+            <Text style={styles.price}>{'for $' + session.price}</Text>
           </View>
           <Text style={styles.totalMoney}>{'$' + session.totalMoney}</Text>
         </View>
@@ -36,13 +41,17 @@ const styles = StyleSheet.create({
   },
   startTime: {
     marginRight: 5,
+    color: 'gray',
+    fontWeight: '600',
   },
-  price: {},
+  price: {color: 'gray'},
   totalMoney: {
     color: 'green',
     fontWeight: 'bold',
   },
-  attendees: {},
+  attendees: {
+    color: 'gray',
+  },
 
   container: {
     padding: 10,
@@ -51,5 +60,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
+    opacity: 0.8,
   },
 });

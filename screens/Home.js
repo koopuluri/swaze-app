@@ -12,18 +12,32 @@ class Home extends Component {
 
   componentDidMount() {
     let {db, user} = this.props;
-    let unsubscribe = db
-      .collection('sessions')
-      .where('creatorId', '==', user.id)
-      .onSnapshot(querySnapshot => {
-        var sessions = [];
-        querySnapshot.forEach(function(doc) {
-          sessions.push(doc);
-        });
-        this.setState({sessions: sessions, isLoading: false});
-      });
-
-    this.setState({unsubscribeListener: unsubscribe});
+    try {
+      let unsubscribe = db
+        .collection('sessions')
+        .orderBy('startTime')
+        .where('creatorId', '==', user.id)
+        .onSnapshot(
+          querySnapshot => {
+            let upcoming = [];
+            let past = [];
+            querySnapshot.forEach(function(doc) {
+              let data = doc.data();
+              let now = new Date() / 1000;
+              if (data.startTime.seconds < now) {
+                past.push(doc);
+              } else {
+                upcoming.push(doc);
+              }
+            });
+            this.setState({past: past, upcoming: upcoming, isLoading: false});
+          },
+          error => console.log(error),
+        );
+      this.setState({unsubscribeListener: unsubscribe});
+    } catch (e) {
+      console.log('error: ', e);
+    }
   }
 
   componentWillUnmount() {
@@ -40,7 +54,10 @@ class Home extends Component {
           onPress={() => this.props.navigation.navigate('Create Session')}
         />
         <SectionList
-          sections={[{title: 'Upcoming', data: this.state.sessions}]}
+          sections={[
+            {title: 'Upcoming', data: this.state.upcoming},
+            {title: 'Completed', data: this.state.past},
+          ]}
           renderItem={sesh => (
             <SessionListItem
               onPress={() => {
