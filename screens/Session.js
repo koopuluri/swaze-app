@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 
 import {View, Text, StyleSheet} from 'react-native';
 import LoadingSpinner from '../components/LoadingSpinner';
+import moment from 'moment';
+import AttendeeList from '../components/AttendeeList';
 
 class Session extends Component {
   state = {
@@ -15,22 +17,22 @@ class Session extends Component {
     let id = this.props.route.params.id;
     db.collection('sessions')
       .doc(id)
-      .onSnapshot(doc =>
-        this.setState({session: doc.data(), isLoading: false}),
-      );
-
-    try {
-      let doc = await db
-        .collection('sessions')
-        .doc(id)
-        .get();
-      this.setState({
-        session: doc.data(),
-        isLoading: false,
+      .onSnapshot(doc => {
+        let data = doc.data();
+        this.setState(
+          {
+            session: {
+              ...data,
+              startTime: moment(data.startTime.seconds * 1000).format(
+                'MMMM Do YYYY, h:mm a',
+              ),
+              id: doc.id,
+            },
+            isLoading: false,
+          },
+          () => console.log('state: ', this.state.session.startTime),
+        );
       });
-    } catch (e) {
-      this.setState({isLoading: false, error: 'Failed to fetch session.'});
-    }
   };
 
   render() {
@@ -38,12 +40,13 @@ class Session extends Component {
     if (isLoading) return <LoadingSpinner />;
     if (!session) return null;
     return (
-      <View>
+      <View style={styles.container}>
         {error ? <Text>{error}</Text> : null}
         <Text style={styles.title}>{session.title}</Text>
-        <Text stye={styles.startTime}>{session.startTime.seconds}</Text>
+        <Text style={styles.startTime}>{session.startTime}</Text>
         <Text style={styles.description}>{session.description}</Text>
-        <Text style={styles.price}>{session.price}</Text>
+        <Text style={styles.price}>{'$' + session.price}</Text>
+        <AttendeeList sessionId={session.id} db={this.props.db} />
       </View>
     );
   }
@@ -53,13 +56,30 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 46,
     fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 15,
   },
-  startTime: {},
-  description: {},
+  container: {
+    textAlign: 'center',
+    padding: 20,
+    height: '100%',
+    backgroundColor: 'white',
+  },
+  startTime: {
+    marginBottom: 15,
+    fontSize: 20,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  description: {
+    marginBottom: 15,
+    fontSize: 16,
+    textAlign: 'center',
+  },
   sectionHeader: {
     padding: 10,
   },
-  price: {color: 'green'},
+  price: {color: 'green', textAlign: 'center', fontSize: 40},
   sectionHeaderText: {
     fontSize: 24,
   },
