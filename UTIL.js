@@ -11,3 +11,7 @@ export function getQueryStringParams(query) {
         }, {})
     : {};
 }
+
+export function getUrlForSession(sessionId) {
+  return 'https://www.swaze.app/' + sessionId;
+}

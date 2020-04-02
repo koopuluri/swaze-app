@@ -28,6 +28,12 @@ class AttendeeList extends Component {
   render() {
     if (this.state.isLoading) return <LoadingSpinner />;
     let {attendees} = this.state;
+    if (attendees.length === 0)
+      return (
+        <Text style={styles.message}>
+          No one has paid to join this session yet.
+        </Text>
+      );
     return (
       <FlatList
         data={attendees}
@@ -50,20 +56,35 @@ class AttendeeList extends Component {
 function AttendeeListItem(props) {
   let {firstName, lastName, email, amountPaid} = props;
   return (
-    <View style={styles.container}>
+    <View style={styles.listItemContainer}>
       <View>
         <Text style={styles.name}>{firstName + ' ' + lastName}</Text>
         <Text style={styles.email}>{email}</Text>
       </View>
-      <Text>{'$ ' + amountPaid}</Text>
+      <Text style={styles.amountPaid}>{'$ ' + amountPaid}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  listItemContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    padding: 10,
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  amountPaid: {
+    color: 'green',
+    fontSize: 20,
+  },
+  message: {
+    textAlign: 'center',
+    fontSize: 16,
+    marginTop: 5,
+    opacity: 0.7,
   },
 });
 
