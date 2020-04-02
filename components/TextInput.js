@@ -5,6 +5,7 @@ import {TextInput, Text, View, StyleSheet} from 'react-native';
 export default function MyTextInput(props) {
   return (
     <View style={styles.container}>
+      {props.title ? <Text style={styles.title}>{props.title}</Text> : null}
       <TextInput
         {...props}
         style={styles.input}

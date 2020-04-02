@@ -4,6 +4,7 @@ import {View, Text, Slider, StyleSheet, Button} from 'react-native';
 import TextInput from '../components/TextInput';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import LoadingSpinner from '../components/LoadingSpinner';
+import CONSTANTS from '../CONSTANTS';
 
 class CreateSession extends Component {
   state = {
@@ -135,8 +136,8 @@ class CreateSession extends Component {
           <TextInput
             onChangeText={title => this.setState({title})}
             value={title}
-            title="Title"
             placeholder="My dance class"
+            maxLength={CONSTANTS.MAX_TITLE_LENGTH}
             error={errors.title}
           />
         </View>
@@ -167,11 +168,11 @@ class CreateSession extends Component {
           <TextInput
             value={description}
             onChangeText={description => this.setState({description})}
-            title="Description"
             multiline={true}
             placeholder="I'm going to teach: ... for an hour and half"
             numberOfLines={4}
             error={errors.description}
+            maxLength={CONSTANTS.MAX_DESCRIPTION_LENGTH}
           />
         </View>
 

@@ -64,13 +64,20 @@ class App extends Component {
   fetchAndSetCurrentUser = async () => {
     db = firebase.firestore();
     let id = firebase.auth().currentUser.uid;
-    let doc = await db
+    let doc = db
       .collection('users')
       .doc(id)
-      .get();
-    if (doc.exists)
-      return this.setState({currentUser: doc.data(), isLoading: false});
-    this.setState({isLoading: false});
+      .onSnapshot(doc => {
+        if (doc.exists) {
+          this.setState({
+            currentUser: {
+              ...doc.data(),
+              id: id,
+            },
+          });
+          this.setState({isLoading: false});
+        }
+      });
   };
 
   componentDidMount = async () => {
@@ -106,15 +113,11 @@ class App extends Component {
             />
           ),
         })}>
-        {props => (
-          <Home
-            {...props}
-            db={db}
-            user={{id: firebaseUser.uid, ...this.state.currentUser}}
-          />
-        )}
+        {props => <Home {...props} db={db} user={this.state.currentUser} />}
       </MainStack.Screen>
-      <MainStack.Screen name="Settings" component={Settings} />
+      <MainStack.Screen name="Settings">
+        {props => <Settings {...props} db={db} user={this.state.currentUser} />}
+      </MainStack.Screen>
       <MainStack.Screen
         name="Session"
         options={({navigation, route}) => ({
@@ -127,13 +130,7 @@ class App extends Component {
             />
           ),
         })}>
-        {props => (
-          <Session
-            {...props}
-            db={db}
-            user={{id: firebaseUser.uid, ...this.state.currentUser}}
-          />
-        )}
+        {props => <Session {...props} db={db} user={this.sta} />}
       </MainStack.Screen>
     </MainStack.Navigator>
   );
@@ -149,11 +146,7 @@ class App extends Component {
         />
         <RootStack.Screen name="Create Session">
           {props => (
-            <CreateSession
-              {...props}
-              db={db}
-              user={{id: firebaseUser.uid, ...this.state.currentUser}}
-            />
+            <CreateSession {...props} db={db} user={this.state.currentUser} />
           )}
         </RootStack.Screen>
         <RootStack.Screen name="Edit Session">
@@ -162,7 +155,7 @@ class App extends Component {
               {...props}
               isEditMode={true}
               db={db}
-              user={{id: firebaseUser.uid, ...this.state.currentUser}}
+              user={this.state.currentUser}
             />
           )}
         </RootStack.Screen>
