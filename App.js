@@ -9,15 +9,7 @@
 import React, {Component} from 'react';
 import {View, Button, Linking, ActivityIndicator} from 'react-native';
 import LoginPage from './screens/Login';
-import Home from './screens/Home';
-import Settings from './screens/Settings';
-import Session from './screens/Session';
-import CreateSession from './screens/CreateSession';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-
-const MainStack = createStackNavigator();
-const RootStack = createStackNavigator();
+import MainNavigationContainer from './components/MainNavigationContainer';
 
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
@@ -100,77 +92,13 @@ class App extends Component {
     }
   };
 
-  getMainStack = (firebaseUser, db) => () => (
-    <MainStack.Navigator>
-      <MainStack.Screen
-        name="Home"
-        options={({navigation, route}) => ({
-          title: 'Sessions',
-          headerRight: () => (
-            <Button
-              title="Settings"
-              onPress={() => navigation.navigate('Settings')}
-            />
-          ),
-        })}>
-        {props => <Home {...props} db={db} user={this.state.currentUser} />}
-      </MainStack.Screen>
-      <MainStack.Screen name="Settings">
-        {props => <Settings {...props} db={db} user={this.state.currentUser} />}
-      </MainStack.Screen>
-      <MainStack.Screen
-        name="Session"
-        options={({navigation, route}) => ({
-          headerRight: () => (
-            <Button
-              title="Edit"
-              onPress={() =>
-                navigation.navigate('Edit Session', {id: route.params.id})
-              }
-            />
-          ),
-        })}>
-        {props => <Session {...props} db={db} user={this.sta} />}
-      </MainStack.Screen>
-    </MainStack.Navigator>
-  );
-
-  getNavigator = (firebaseUser, db) => {
-    let MainStack = this.getMainStack(firebaseUser, db);
-    return (
-      <RootStack.Navigator mode="modal">
-        <RootStack.Screen
-          name="Main"
-          component={MainStack}
-          options={{headerShown: false}}
-        />
-        <RootStack.Screen name="Create Session">
-          {props => (
-            <CreateSession {...props} db={db} user={this.state.currentUser} />
-          )}
-        </RootStack.Screen>
-        <RootStack.Screen name="Edit Session">
-          {props => (
-            <CreateSession
-              {...props}
-              isEditMode={true}
-              db={db}
-              user={this.state.currentUser}
-            />
-          )}
-        </RootStack.Screen>
-      </RootStack.Navigator>
-    );
-  };
-
   render() {
     let db = firebase.firestore();
     if (this.state.isLoading) return <LoadingSpinner />;
     let firebaseUser = firebase.auth().currentUser;
+    if (!firebaseUser) return <LoginPage />;
     return (
-      <NavigationContainer>
-        {!firebaseUser ? <LoginPage /> : this.getNavigator(firebaseUser, db)}
-      </NavigationContainer>
+      <MainNavigationContainer currentUser={this.state.currentUser} db={db} />
     );
   }
 }

@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Button} from 'react-native';
+import {View, Text, StyleSheet, Button, Linking} from 'react-native';
 import {ScrollView, TouchableHighlight} from 'react-native-gesture-handler';
 import Modal from '../components/Modal';
 import TextInput from '../components/TextInput';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Link from '../components/Link';
 import CONSTANTS from '../CONSTANTS';
+import {getStripeConnectAuthUrl} from '../UTIL';
 
 class Settings extends Component {
   state = {
@@ -100,6 +101,7 @@ class Settings extends Component {
           <Text style={styles.menuText}>
             Connect your bank to receive payments.
           </Text>,
+          () => Linking.openURL(getStripeConnectAuthUrl(user)),
         )}
         <View style={{marginTop: 30, padding: 20}}>
           <Link
