@@ -19,7 +19,8 @@ class Session extends Component {
   componentDidMount = async () => {
     let {db} = this.props;
     let id = this.props.route.params.id;
-    db.collection('sessions')
+    let unsubscribe = db
+      .collection('sessions')
       .doc(id)
       .onSnapshot(doc => {
         let data = doc.data();
@@ -34,7 +35,11 @@ class Session extends Component {
           isLoading: false,
         });
       });
+    this.setState({unsubscribe: unsubscribe});
   };
+
+  componentWillUnmount = () =>
+    this.state.unsubscribe ? this.state.unsubscribe() : null;
 
   getUrlToCopy = () => {
     let {session, copied} = this.state;

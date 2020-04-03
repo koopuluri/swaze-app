@@ -12,32 +12,30 @@ class Home extends Component {
 
   componentDidMount() {
     let {db, user} = this.props;
-    try {
-      let unsubscribe = db
-        .collection('sessions')
-        .orderBy('startTime')
-        .where('creatorId', '==', user.id)
-        .onSnapshot(
-          querySnapshot => {
-            let upcoming = [];
-            let past = [];
-            querySnapshot.forEach(function(doc) {
-              let data = doc.data();
-              let now = new Date() / 1000;
-              if (data.startTime.seconds < now) {
-                past.push(doc);
-              } else {
-                upcoming.push(doc);
-              }
-            });
-            this.setState({past: past, upcoming: upcoming, isLoading: false});
-          },
-          error => console.log(error),
-        );
-      this.setState({unsubscribeListener: unsubscribe});
-    } catch (e) {
-      console.log('error: ', e);
-    }
+    let unsubscribe = db
+      .collection('sessions')
+      .orderBy('startTime')
+      .where('creatorId', '==', user.id)
+      .onSnapshot(
+        querySnapshot => {
+          let upcoming = [];
+          let past = [];
+          querySnapshot.forEach(function(doc) {
+            let data = doc.data();
+            let now = new Date() / 1000;
+            if (data.startTime.seconds < now) {
+              past.push(doc);
+            } else {
+              upcoming.push(doc);
+            }
+          });
+          this.setState({past: past, upcoming: upcoming, isLoading: false});
+        },
+        error => {
+          if (this.state.unsubscribeListener) this.state.unsubscribeListener();
+        },
+      );
+    this.setState({unsubscribeListener: unsubscribe});
   }
 
   componentWillUnmount() {

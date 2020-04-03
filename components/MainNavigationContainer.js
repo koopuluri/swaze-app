@@ -52,7 +52,7 @@ export default function MainNavigationContainer(props) {
     return null;
   }
 
-  let {db, currentUser} = props;
+  let {db, currentUser, logout} = props;
 
   let MainStackComponent = () => (
     <MainStack.Navigator uriPrefix="com.swaze://">
@@ -70,7 +70,9 @@ export default function MainNavigationContainer(props) {
         {props => <Home {...props} db={db} user={currentUser} />}
       </MainStack.Screen>
       <MainStack.Screen name="settings" path="settings">
-        {props => <Settings {...props} db={db} user={currentUser} />}
+        {props => (
+          <Settings {...props} logout={logout} db={db} user={currentUser} />
+        )}
       </MainStack.Screen>
       <MainStack.Screen
         name="Session"

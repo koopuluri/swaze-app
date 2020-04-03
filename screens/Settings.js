@@ -105,8 +105,16 @@ class Settings extends Component {
     );
   };
 
+  logout = async () => {
+    this.setState({isLogoutLoading: true});
+    try {
+      await this.props.logout();
+      this.setState({isLogoutLoading: false});
+    } catch (e) {}
+  };
+
   render() {
-    let {user} = this.props;
+    let {user, logout} = this.props;
     let {isNameModalOpen} = this.state;
     return (
       <ScrollView style={styles.settingsContainer}>
@@ -115,6 +123,12 @@ class Settings extends Component {
           onPress={() => this.setState({isNameModalOpen: true})}
         />
         {this.getConnectBankRow()}
+        <SettingsListItem
+          label="Log out"
+          labelColor="red"
+          isLoading={this.state.isLogoutLoading}
+          onPress={() => logout()}
+        />
         <View style={{marginTop: 30, padding: 20}}>
           <Link
             style={{marginBottom: 10}}
@@ -143,12 +157,22 @@ function SettingsListItem(props) {
       onPress={props.onPress}
       underlayColor="#e8e8e8"
       style={styles.settingsMenuItem}>
-      <View>
-        <Text style={styles.menuText}>{props.label}</Text>
-        {props.caption ? (
-          <Text style={styles.caption}>{props.caption}</Text>
-        ) : null}
-      </View>
+      {!props.isLoading ? (
+        <View>
+          <Text
+            style={{
+              ...styles.menuText,
+              color: props.labelColor ? props.labelColor : 'black',
+            }}>
+            {props.label}
+          </Text>
+          {props.caption ? (
+            <Text style={styles.caption}>{props.caption}</Text>
+          ) : null}
+        </View>
+      ) : (
+        <LoadingSpinner />
+      )}
     </TouchableHighlight>
   );
 }

@@ -51,35 +51,40 @@ class App extends Component {
   state = {
     currentUser: null,
     isLoading: true,
+    unsubscribe: null,
   };
 
   fetchAndSetCurrentUser = async () => {
     db = firebase.firestore();
     let id = firebase.auth().currentUser.uid;
-    let doc = db
-      .collection('users')
-      .doc(id)
-      .onSnapshot(doc => {
-        if (doc.exists) {
-          this.setState({
-            currentUser: {
-              ...doc.data(),
-              id: id,
-            },
-          });
-          this.setState({isLoading: false});
-        }
-      });
+    try {
+      let unsubscribe = db
+        .collection('users')
+        .doc(id)
+        .onSnapshot(doc => {
+          if (doc.exists) {
+            this.setState({
+              currentUser: {
+                ...doc.data(),
+                id: id,
+              },
+            });
+            this.setState({isLoading: false});
+          }
+        });
+      this.setState({unsubscribe: unsubscribe});
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   componentDidMount = async () => {
-    if (firebase.auth().currentUser && !this.state.currentUser)
-      this.fetchAndSetCurrentUser();
-
     firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         this.fetchAndSetCurrentUser();
       } else {
+        if (this.state.unsubscribe) this.state.unsubscribe();
+        this.setState({currentUser: null});
       }
     });
   };
@@ -92,13 +97,38 @@ class App extends Component {
     }
   };
 
+  logout = async () => {
+    try {
+      if (this.state.unsubscribe) this.state.unsubscribe();
+      await firebase.auth().signOut();
+      return true;
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
+  };
+
   render() {
+    let {currentUser} = this.state;
+    if (!currentUser)
+      return (
+        <LoginPage
+          signInWithCustomToken={async token =>
+            firebase.auth().signInWithCustomToken(token)
+          }
+          completeSignIn={this.completeSignIn}
+        />
+      );
+
     let db = firebase.firestore();
     if (this.state.isLoading) return <LoadingSpinner />;
-    let firebaseUser = firebase.auth().currentUser;
-    if (!firebaseUser) return <LoginPage />;
+
     return (
-      <MainNavigationContainer currentUser={this.state.currentUser} db={db} />
+      <MainNavigationContainer
+        logout={this.logout}
+        currentUser={this.state.currentUser}
+        db={db}
+      />
     );
   }
 }

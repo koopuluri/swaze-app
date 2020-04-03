@@ -2,42 +2,31 @@ import React, {Component} from 'react';
 import {View, Text, Button, Linking} from 'react-native';
 
 import {getQueryStringParams} from '../UTIL';
-import * as firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
-
-var firebaseConfig = {
-  apiKey: 'AIzaSyCxfLEkFeJMxsaX3JxOVAfRODS3vud-TjU',
-  authDomain: 'swaze-d8f83.firebaseapp.com',
-  databaseURL: 'https://swaze-d8f83.firebaseio.com',
-  projectId: 'swaze-d8f83',
-  storageBucket: 'swaze-d8f83.appspot.com',
-  messagingSenderId: '572770145804',
-  appId: '1:572770145804:web:4e20f5dab789de4fa1c029',
-  measurementId: 'G-XRH96MQ3WH',
-};
-
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
 
 class LoginPage extends Component {
   componentDidMount = async () => {
+    console.log('this.props for <Login>: ', this.props);
     Linking.addEventListener('url', async event => {
-      console.log('received url w/ event: ', event);
-
       let {access_token, refresh_token, custom_token} = getQueryStringParams(
         event.url,
       );
 
       // log this user in with Firebase using the custom_token:
       try {
-        this.props.signInWithCustomToken(custom_token);
+        await this.props.signInWithCustomToken(custom_token);
+        console.log(
+          'SUCCESSFULLY LOGGED IN. Go back to App.js now to re-render',
+        );
+        this.props.completeSignIn();
       } catch (e) {
         console.log('error authing: ', e.message);
       }
     });
   };
+
+  componentWillUnmount() {
+    console.log('<Login> unmounting!');
+  }
 
   render() {
     return (
