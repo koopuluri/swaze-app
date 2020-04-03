@@ -18,8 +18,12 @@ export function getUrlForSession(sessionId) {
 
 export function getStripeConnectAuthUrl(user) {
   console.log('triggering stripe with the user id: ', user.id);
+
+  // PROD:
   const REDIRECT_URI =
-    'https://ff5c5737.ngrok.io/swaze-d8f83/us-central1/stripeConnectRedirect';
+    'https://us-central1-swaze-d8f83.cloudfunctions.net/stripeConnectRedirect';
+  //const REDIRECT_URI =
+  ('https://ff5c5737.ngrok.io/swaze-d8f83/us-central1/stripeConnectRedirect');
   const STRIPE_CLIENT_ID = 'ca_H1bZF2mvmTpIuGM86Tw5ig5JdkxjsBJY'; // TEST CLIENT ID
   return (
     'https://connect.stripe.com/express/oauth/authorize?redirect_uri=' +

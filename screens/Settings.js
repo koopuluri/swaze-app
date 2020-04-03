@@ -17,15 +17,6 @@ class Settings extends Component {
     },
     errors: {},
   };
-  getRowItem = (comp, onPress) => (
-    <TouchableHighlight
-      underlayColor="#e8e8e8"
-      style={styles.settingsMenuItem}
-      onPress={onPress}>
-      {comp}
-    </TouchableHighlight>
-  );
-
   getNameEditForm = () => {
     let {name, isNameModalLoading, errors} = this.state;
     let {db, user} = this.props;
@@ -86,23 +77,44 @@ class Settings extends Component {
     );
   };
 
+  getConnectBankRow = () => {
+    let {user} = this.props;
+    let message = '';
+    let onPress = null;
+    let label = '';
+    let icon = ''; // TODO: set this once we have icon support.
+
+    if (!user.stripe) {
+      message = 'Swaze uses Stripe to process payments and payouts.';
+      label = 'Connect your bank to receive payouts.';
+      onPress = () => Linking.openURL(getStripeConnectAuthUrl(user));
+    } else {
+      if (user.stripe.error) {
+        message =
+          "There was an issue connecting your account. Please try again or reach out to us and we'll work with you to sort it out.";
+        label = 'Connect your bank';
+        onPress = () => Linking.openURL(getStripeConnectAuthUrl(user));
+      } else {
+        message =
+          'Contact us if you wish to change anything about your account.';
+        label = 'Account successfully connected';
+      }
+    }
+    return (
+      <SettingsListItem label={label} onPress={onPress} caption={message} />
+    );
+  };
+
   render() {
     let {user} = this.props;
     let {isNameModalOpen} = this.state;
     return (
       <ScrollView style={styles.settingsContainer}>
-        {this.getRowItem(
-          <Text style={styles.menuText}>
-            {user.firstName + ' ' + user.lastName}
-          </Text>,
-          () => this.setState({isNameModalOpen: true}),
-        )}
-        {this.getRowItem(
-          <Text style={styles.menuText}>
-            Connect your bank to receive payments.
-          </Text>,
-          () => Linking.openURL(getStripeConnectAuthUrl(user)),
-        )}
+        <SettingsListItem
+          label={user.firstName + ' ' + user.lastName}
+          onPress={() => this.setState({isNameModalOpen: true})}
+        />
+        {this.getConnectBankRow()}
         <View style={{marginTop: 30, padding: 20}}>
           <Link
             style={{marginBottom: 10}}
@@ -125,13 +137,30 @@ class Settings extends Component {
   }
 }
 
+function SettingsListItem(props) {
+  return (
+    <TouchableHighlight
+      onPress={props.onPress}
+      underlayColor="#e8e8e8"
+      style={styles.settingsMenuItem}>
+      <View>
+        <Text style={styles.menuText}>{props.label}</Text>
+        {props.caption ? (
+          <Text style={styles.caption}>{props.caption}</Text>
+        ) : null}
+      </View>
+    </TouchableHighlight>
+  );
+}
+
 const styles = StyleSheet.create({
   settingsContainer: {
     height: '100%',
     backgroundColor: 'white',
     paddingTop: 40,
   },
-  menuText: {fontSize: 16},
+  menuText: {fontSize: 16, fontWeight: 'bold'},
+  caption: {marginTop: 3, fontSize: 14, opacity: 0.7},
   settingsMenuItem: {
     padding: 20,
     borderBottomWidth: 1,
