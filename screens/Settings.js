@@ -77,8 +77,15 @@ class Settings extends Component {
     );
   };
 
+  openStripeConnectUrl = async () => {
+    let userToken = await this.props.firebase
+      .auth()
+      .currentUser.getIdToken(true);
+    Linking.openURL(getStripeConnectAuthUrl(userToken));
+  };
+
   getConnectBankRow = () => {
-    let {user} = this.props;
+    let {user, firebase} = this.props;
     let message = '';
     let onPress = null;
     let label = '';
@@ -87,13 +94,13 @@ class Settings extends Component {
     if (!user.stripe) {
       message = 'Swaze uses Stripe to process payments and payouts.';
       label = 'Connect your bank to receive payouts.';
-      onPress = () => Linking.openURL(getStripeConnectAuthUrl(user));
+      onPress = () => this.openStripeConnectUrl();
     } else {
       if (user.stripe.error) {
         message =
           "There was an issue connecting your account. Please try again or reach out to us and we'll work with you to sort it out.";
         label = 'Connect your bank';
-        onPress = () => Linking.openURL(getStripeConnectAuthUrl(user));
+        onPress = () => this.openStripeConnectUrl();
       } else {
         message =
           'Contact us if you wish to change anything about your account.';

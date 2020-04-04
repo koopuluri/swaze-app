@@ -127,6 +127,7 @@ class App extends Component {
       <MainNavigationContainer
         logout={this.logout}
         currentUser={this.state.currentUser}
+        firebase={firebase}
         db={db}
       />
     );

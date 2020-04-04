@@ -16,9 +16,7 @@ export function getUrlForSession(sessionId) {
   return 'https://www.swaze.app/' + sessionId;
 }
 
-export function getStripeConnectAuthUrl(user) {
-  console.log('triggering stripe with the user id: ', user.id);
-
+export function getStripeConnectAuthUrl(userToken) {
   // PROD:
   const REDIRECT_URI =
     'https://us-central1-swaze-d8f83.cloudfunctions.net/stripeConnectRedirect';
@@ -31,6 +29,6 @@ export function getStripeConnectAuthUrl(user) {
     '&client_id=' +
     STRIPE_CLIENT_ID +
     '&stripe_user[business_type]=individual&state=' +
-    user.id
+    userToken
   );
 }
