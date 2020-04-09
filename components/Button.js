@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
     marginTop: 10,
     marginBottom: 10,
-    padding: 25,
+    padding: 20,
     borderRadius: 8,
     backgroundColor: '#fbee54',
     shadowColor: 'black',

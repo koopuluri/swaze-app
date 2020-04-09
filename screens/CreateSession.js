@@ -1,6 +1,7 @@
 import React, {Component, useState} from 'react';
 
-import {View, Text, Slider, StyleSheet, Button} from 'react-native';
+import {View, Text, Slider, Button, StyleSheet} from 'react-native';
+import SwazeButton from '../components/Button';
 import TextInput from '../components/TextInput';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -71,12 +72,9 @@ class CreateSession extends Component {
       let {db, user, navigation, firebase} = this.props;
       try {
         this.setState({isLoading: true});
-
         let userToken = await firebase.auth().currentUser.getIdToken(true);
-
         let resp = await createZoomMeeting(userToken, title, startTime);
         let zoomMeetingId = resp.data.id;
-
         await db.collection('sessions').add({
           creatorId: user.id,
           title: title,
@@ -219,7 +217,10 @@ class CreateSession extends Component {
           <Text style={styles.price}>${price}</Text>
         </View>
         {!isLoading ? (
-          <Button title="Save" onPress={() => this.submit()} />
+          <SwazeButton
+            title={isEditMode ? 'Save' : 'Create'}
+            onPress={() => this.submit()}
+          />
         ) : (
           <LoadingSpinner />
         )}
