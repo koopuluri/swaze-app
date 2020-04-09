@@ -88,7 +88,6 @@ class CreateSession extends Component {
         navigation.navigate('Home');
       } catch (e) {
         console.log('error saving');
-        this.setState({title: 'ERROR SAVING! ' + e.message, isLoading: false});
       }
     } else {
       this.validate();
