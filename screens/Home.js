@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {View, Text, Button, SectionList, StyleSheet} from 'react-native';
+import {View, Text, SectionList, StyleSheet} from 'react-native';
+import Button from '../components/Button';
 import SessionListItem from '../components/SessionListItem';
 import LoadingSpinner from '../components/LoadingSpinner';
 

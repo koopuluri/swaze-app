@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {View, Text, Button, Linking} from 'react-native';
+import {View, Text, Linking} from 'react-native';
 
+import Button from '../components/Button';
 import {getQueryStringParams} from '../UTIL';
 
 class LoginPage extends Component {
@@ -23,10 +24,6 @@ class LoginPage extends Component {
       }
     });
   };
-
-  componentWillUnmount() {
-    console.log('<Login> unmounting!');
-  }
 
   render() {
     return (
