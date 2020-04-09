@@ -92,7 +92,9 @@ export default function MainNavigationContainer(props) {
             />
           ),
         })}>
-        {props => <Session {...props} db={db} user={currentUser} />}
+        {props => (
+          <Session {...props} firebase={firebase} db={db} user={currentUser} />
+        )}
       </MainStack.Screen>
     </MainStack.Navigator>
   );
@@ -106,13 +108,21 @@ export default function MainNavigationContainer(props) {
           options={{headerShown: false}}
         />
         <RootStack.Screen name="Create Session">
-          {props => <CreateSession {...props} db={db} user={currentUser} />}
+          {props => (
+            <CreateSession
+              {...props}
+              firebase={firebase}
+              db={db}
+              user={currentUser}
+            />
+          )}
         </RootStack.Screen>
         <RootStack.Screen name="Edit Session">
           {props => (
             <CreateSession
               {...props}
               isEditMode={true}
+              firebase={firebase}
               db={db}
               user={currentUser}
             />

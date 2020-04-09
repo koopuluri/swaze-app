@@ -13,7 +13,6 @@ class AttendeeList extends Component {
     // fetch attendees for this session:
     let unsubscribe = db
       .collection('sessions/' + sessionId + '/attendees')
-      .orderBy('joinedAt')
       .onSnapshot(querySnapshot => {
         attendees = [];
         querySnapshot.forEach(doc => attendees.push(doc));

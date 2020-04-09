@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 
-import {View, Text, StyleSheet, Clipboard} from 'react-native';
+import {View, Text, StyleSheet, Clipboard, Button} from 'react-native';
 import LoadingSpinner from '../components/LoadingSpinner';
 import moment from 'moment';
 import AttendeeList from '../components/AttendeeList';
 
 import {getUrlForSession} from '../UTIL';
 import {TouchableHighlight} from 'react-native-gesture-handler';
+
+import {deleteZoomMeeting} from '../api/zoom';
 
 class Session extends Component {
   state = {
@@ -61,6 +63,35 @@ class Session extends Component {
     );
   };
 
+  delete = async () => {
+    let {firebase, navigation} = this.props;
+    let {session} = this.state;
+
+    try {
+      this.setState({isLoading: true});
+      let userToken = await firebase.auth().currentUser.getIdToken(true);
+      console.log(
+        'attempting to delete zoomMeetingId: ',
+        session.zoomMeetingId,
+      );
+      let resp = await deleteZoomMeeting(userToken, session.zoomMeetingId);
+      console.log('zoom meeting successfully deleted: ', resp.data.id);
+
+      this.state.unsubscribe();
+      // deleting the firestore object:
+      await firebase
+        .firestore()
+        .collection('sessions')
+        .doc(session.id)
+        .delete();
+
+      console.log('session successfully deleted!');
+      navigation.navigate('Home');
+    } catch (e) {
+      console.error('error deleting the session: ', e);
+    }
+  };
+
   render() {
     let {session, isLoading, error} = this.state;
     if (isLoading) return <LoadingSpinner />;
@@ -85,6 +116,13 @@ class Session extends Component {
           <Text style={styles.label}>ATTENDEES</Text>
           <AttendeeList sessionId={session.id} db={this.props.db} />
         </View>
+        {session.totalAttendees === 0 ? (
+          <Button
+            onPress={this.delete}
+            title="Delete this session"
+            color="red"
+          />
+        ) : null}
       </View>
     );
   }

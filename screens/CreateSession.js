@@ -6,6 +6,8 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import LoadingSpinner from '../components/LoadingSpinner';
 import CONSTANTS from '../CONSTANTS';
 
+import {createZoomMeeting, editZoomMeeting} from '../api/zoom';
+
 class CreateSession extends Component {
   state = {
     title: '',
@@ -33,6 +35,7 @@ class CreateSession extends Component {
         .get();
       let session = doc.data();
       this.setState({
+        zoomMeetingId: session.zoomMeetingId,
         isPageLoading: false,
         title: session.title,
         description: session.description,
@@ -65,10 +68,16 @@ class CreateSession extends Component {
     if (title && description && startTime) {
       this.validate();
       // submit it:
-      let {db, user, navigation} = this.props;
+      let {db, user, navigation, firebase} = this.props;
       try {
         this.setState({isLoading: true});
-        let doc = await db.collection('sessions').add({
+
+        let userToken = await firebase.auth().currentUser.getIdToken(true);
+
+        let resp = await createZoomMeeting(userToken, title, startTime);
+        let zoomMeetingId = resp.data.id;
+
+        await db.collection('sessions').add({
           creatorId: user.id,
           title: title,
           description: description,
@@ -76,6 +85,7 @@ class CreateSession extends Component {
           price: price,
           totalAttendees: 0,
           totalMoney: 0,
+          zoomMeetingId: zoomMeetingId,
         });
         navigation.navigate('Home');
       } catch (e) {
@@ -88,11 +98,19 @@ class CreateSession extends Component {
   };
 
   save = async () => {
-    let {title, description, startTime, price} = this.state;
-    let {db, navigation, route} = this.props;
+    let {title, description, startTime, price, zoomMeetingId} = this.state;
+    let {db, navigation, route, firebase} = this.props;
     try {
       this.setState({isLoading: true});
-      let saved = await db
+      let userToken = await firebase.auth().currentUser.getIdToken(true);
+      let resp = await editZoomMeeting(
+        userToken,
+        zoomMeetingId,
+        title,
+        startTime,
+      );
+      console.log('zoom meeting edited successfully: ', resp.data.id);
+      await db
         .collection('sessions')
         .doc(route.params.id)
         .set(
