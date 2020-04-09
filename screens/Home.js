@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
   },
   sectionHeaderText: {
     fontSize: 24,
+    color: 'white',
   },
 });
 
