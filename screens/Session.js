@@ -55,7 +55,7 @@ class Session extends Component {
         underlayColor="#d3d3d3"
         style={styles.url}>
         {!copied ? (
-          <Text>{url}</Text>
+          <Text style={styles.urlText}>{url}</Text>
         ) : (
           <Text style={{textAlign: 'center'}}>Copied url!</Text>
         )}
@@ -99,20 +99,21 @@ class Session extends Component {
     return (
       <View style={styles.container}>
         {error ? <Text>{error}</Text> : null}
-        <Text style={styles.title}>{session.title}</Text>
-        <Text style={styles.startTime}>{session.startTime}</Text>
-        {this.getUrlToCopy()}
-        <View style={styles.notify}>
-          <Text style={styles.totalAttendees}>
-            {session.totalAttendees + ' attendees'}
+        <View style={styles.topSection}>
+          <Text style={styles.title}>{session.title}</Text>
+          <Text style={styles.startTime}>{session.startTime}</Text>
+          <Text style={styles.price}>
+            {'$' +
+              session.price +
+              ' x ' +
+              session.totalAttendees +
+              ' = $' +
+              session.totalMoney}
           </Text>
-          <Text style={styles.totalMoney}>{'$' + session.totalMoney}</Text>
+          {this.getUrlToCopy()}
+          <Text style={styles.description}>{session.description}</Text>
         </View>
-        <Text style={styles.price}>
-          {'$' + session.price + ' per attendee'}
-        </Text>
-        <Text style={styles.description}>{session.description}</Text>
-        <View style={{marginTop: 40}}>
+        <View style={{marginTop: 40, marginBottom: 60}}>
           <Text style={styles.label}>ATTENDEES</Text>
           <AttendeeList sessionId={session.id} db={this.props.db} />
         </View>
@@ -129,57 +130,52 @@ class Session extends Component {
 }
 
 const styles = StyleSheet.create({
-  url: {
-    textAlign: 'center',
-    padding: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 24,
-  },
-  notify: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    elevation: 8,
-    padding: 20,
-    margin: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 24,
-    marginLeft: 40,
-    marginRight: 40,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    elevation: 100,
-  },
-
-  totalAttendees: {
-    fontSize: 20,
-  },
-
-  totalMoney: {fontSize: 20},
-
-  label: {
-    textAlign: 'center',
-    fontSize: 20,
-  },
-  title: {
-    fontSize: 46,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 15,
-    opacity: 0.85,
-  },
   container: {
     textAlign: 'center',
     padding: 20,
     height: '100%',
     backgroundColor: 'white',
   },
-  startTime: {
-    marginBottom: 15,
-    fontSize: 20,
+
+  topSection: {
+    backgroundColor: 'rgba(85, 14, 141, 0.06)',
+    padding: 20,
+    borderRadius: 20,
+  },
+
+  url: {
     textAlign: 'center',
+    padding: 10,
+    borderTopColor: '#e8e8e8',
+    borderTopWidth: 1,
+    borderBottomColor: '#e8e8e8',
+    borderBottomWidth: 1,
+    paddingTop: 20,
+    paddingBottom: 20,
+    marginBottom: 20,
+  },
+  urlText: {
+    fontSize: 14,
     opacity: 0.7,
+  },
+
+  label: {
+    textAlign: 'center',
+    fontSize: 20,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: '500',
+    textAlign: 'center',
+    marginBottom: 15,
+    opacity: 0.85,
+  },
+  startTime: {
+    marginBottom: 20,
+    fontWeight: '300',
+    fontSize: 20,
+    color: '#5a6169',
+    textAlign: 'center',
   },
   description: {
     fontSize: 16,
@@ -192,7 +188,9 @@ const styles = StyleSheet.create({
   price: {
     textAlign: 'center',
     fontSize: 20,
-    marginBottom: 15,
+    marginBottom: 20,
+    fontWeight: 'bold',
+    color: 'green',
     opacity: 0.7,
   },
   sectionHeaderText: {

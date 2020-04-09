@@ -11,12 +11,13 @@ class AttendeeList extends Component {
   componentDidMount() {
     let {sessionId, db} = this.props;
     // fetch attendees for this session:
+    this.setState({isLoading: true});
     let unsubscribe = db
       .collection('sessions/' + sessionId + '/attendees')
       .onSnapshot(querySnapshot => {
         attendees = [];
         querySnapshot.forEach(doc => attendees.push(doc));
-        this.setState({attendees: attendees});
+        this.setState({attendees: attendees, isLoading: false});
       });
     this.setState({unsubscribe: unsubscribe});
   }
@@ -25,7 +26,12 @@ class AttendeeList extends Component {
     this.state.unsubscribe ? this.state.unsubscribe() : null;
 
   render() {
-    if (this.state.isLoading) return <LoadingSpinner />;
+    if (this.state.isLoading)
+      return (
+        <View style={{marginTop: 20}}>
+          <LoadingSpinner />
+        </View>
+      );
     let {attendees} = this.state;
     if (attendees.length === 0)
       return (
@@ -74,6 +80,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: '600',
+    marginBottom: 5,
   },
   amountPaid: {
     color: 'green',
