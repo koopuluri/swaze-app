@@ -23,6 +23,7 @@ class Button extends Component {
           shadowOffset: this.state.isTouched
             ? {width: 0, height: 0}
             : {width: 4, height: 4},
+          padding: props.padding ? props.padding : 20,
         }}
         onPress={props.onPress}>
         <Text

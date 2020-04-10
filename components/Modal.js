@@ -2,7 +2,10 @@ import React from 'react';
 import Modal from 'react-native-modal';
 import {View, StyleSheet, Text} from 'react-native';
 import {TouchableHighlight} from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
+// https://stackoverflow.com/a/36940904/2713471 - order of views matter when
+// absolutely positioning
 export default function SwazeModal(props) {
   return (
     <Modal isVisible={props.isVisible}>
@@ -13,17 +16,15 @@ export default function SwazeModal(props) {
           justifyContent: 'center',
         }}>
         <View style={styles.modalView}>
-          <View
-            style={{
-              flexDirection: 'row',
-            }}>
-            <TouchableHighlight
-              style={{marginRight: 10}}
-              onPress={() => props.close()}
-              underlayColor="white">
-              <Text style={{color: 'blue'}}>Cancel</Text>
-            </TouchableHighlight>
+          <View>
             <Text style={styles.title}>{props.title}</Text>
+            <Icon
+              onPress={() => props.close()}
+              style={{position: 'absolute'}}
+              name="times-circle-o"
+              size={24}
+              color="gray"
+            />
           </View>
           {props.children}
         </View>

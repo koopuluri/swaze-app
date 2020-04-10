@@ -5,7 +5,7 @@ import Settings from '../screens/Settings';
 import Session from '../screens/Session';
 import CreateSession from '../screens/CreateSession';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Button} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const MainStack = createStackNavigator();
 const RootStack = createStackNavigator();
@@ -59,17 +59,41 @@ export default function MainNavigationContainer(props) {
       <MainStack.Screen
         name="Home"
         options={({navigation, route}) => ({
-          title: 'Sessions',
+          title: 'SWAZE',
           headerRight: () => (
-            <Button
-              title="Settings"
+            <Icon
               onPress={() => navigation.navigate('settings')}
+              name="cog"
+              size={24}
+              color="white"
+              style={{marginRight: 20}}
             />
           ),
+          headerStyle: {
+            backgroundColor: '#550e8d',
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            fontStyle: 'italic',
+            color: 'white',
+          },
         })}>
         {props => <Home {...props} db={db} user={currentUser} />}
       </MainStack.Screen>
-      <MainStack.Screen name="settings" path="settings">
+      <MainStack.Screen
+        name="settings"
+        path="settings"
+        options={({navigation, route}) => ({
+          headerLeft: () => (
+            <Icon
+              onPress={() => navigation.pop()}
+              name="chevron-left"
+              size={20}
+              color="black"
+              style={{marginLeft: 20}}
+            />
+          ),
+        })}>
         {props => (
           <Settings
             {...props}
@@ -83,12 +107,28 @@ export default function MainNavigationContainer(props) {
       <MainStack.Screen
         name="Session"
         options={({navigation, route}) => ({
+          title: '',
+          headerStyle: {
+            backgroundColor: '#550e8d',
+          },
           headerRight: () => (
-            <Button
-              title="Edit"
+            <Icon
               onPress={() =>
                 navigation.navigate('Edit Session', {id: route.params.id})
               }
+              name="pencil-square-o"
+              size={24}
+              color="white"
+              style={{marginRight: 20}}
+            />
+          ),
+          headerLeft: () => (
+            <Icon
+              onPress={() => navigation.pop()}
+              name="chevron-left"
+              size={20}
+              color="white"
+              style={{marginLeft: 20}}
             />
           ),
         })}>
@@ -107,7 +147,20 @@ export default function MainNavigationContainer(props) {
           component={MainStackComponent}
           options={{headerShown: false}}
         />
-        <RootStack.Screen name="Create Session">
+        <RootStack.Screen
+          name="Create Session"
+          options={({navigation, route}) => ({
+            title: 'Create',
+            headerLeft: () => (
+              <Icon
+                onPress={() => navigation.pop()}
+                name="chevron-left"
+                size={20}
+                color="gray"
+                style={{marginLeft: 20}}
+              />
+            ),
+          })}>
           {props => (
             <CreateSession
               {...props}
@@ -117,7 +170,21 @@ export default function MainNavigationContainer(props) {
             />
           )}
         </RootStack.Screen>
-        <RootStack.Screen name="Edit Session">
+        <RootStack.Screen
+          name="Edit Session"
+          options={({navigation, route}) => ({
+            title: 'Edit',
+
+            headerLeft: () => (
+              <Icon
+                onPress={() => navigation.pop()}
+                name="chevron-left"
+                size={20}
+                color="gray"
+                style={{marginLeft: 20}}
+              />
+            ),
+          })}>
           {props => (
             <CreateSession
               {...props}

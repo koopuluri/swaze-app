@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Button, Linking} from 'react-native';
+import {View, Text, StyleSheet, Linking} from 'react-native';
 import {ScrollView, TouchableHighlight} from 'react-native-gesture-handler';
 import Modal from '../components/Modal';
+import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Link from '../components/Link';
 import CONSTANTS from '../CONSTANTS';
 import {getStripeConnectAuthUrl} from '../UTIL';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 class Settings extends Component {
   state = {
@@ -44,6 +46,7 @@ class Settings extends Component {
         ) : (
           <Button
             title="Save"
+            padding={10}
             onPress={async () => {
               errors = {};
               if (!name.firstName)
@@ -89,26 +92,56 @@ class Settings extends Component {
     let message = '';
     let onPress = null;
     let label = '';
+    let rightIcon = null;
     let icon = ''; // TODO: set this once we have icon support.
 
     if (!user.stripe) {
       message = 'Swaze uses Stripe to process payments and payouts.';
       label = 'Connect your bank to receive payouts.';
       onPress = () => this.openStripeConnectUrl();
+      rightIcon = (
+        <Icon
+          name="exclamation-triangle"
+          size={24}
+          color="red"
+          style={{marginRight: -4}}
+        />
+      );
     } else {
       if (user.stripe.error) {
         message =
           "There was an issue connecting your account. Please try again or reach out to us and we'll work with you to sort it out.";
         label = 'Connect your bank';
         onPress = () => this.openStripeConnectUrl();
+        rightIcon = (
+          <Icon
+            name="exclamation-triangle"
+            size={24}
+            color="red"
+            style={{marginRight: -4}}
+          />
+        );
       } else {
         message =
           'Contact us if you wish to change anything about your account.';
         label = 'Account successfully connected';
+        rightIcon = (
+          <Icon
+            name="check-circle"
+            size={24}
+            color="#00cc00"
+            style={{marginRight: -3}}
+          />
+        );
       }
     }
     return (
-      <SettingsListItem label={label} onPress={onPress} caption={message} />
+      <SettingsListItem
+        label={label}
+        onPress={onPress}
+        caption={message}
+        rightIcon={rightIcon}
+      />
     );
   };
 
@@ -165,17 +198,28 @@ function SettingsListItem(props) {
       underlayColor="#e8e8e8"
       style={styles.settingsMenuItem}>
       {!props.isLoading ? (
-        <View>
-          <Text
-            style={{
-              ...styles.menuText,
-              color: props.labelColor ? props.labelColor : 'black',
-            }}>
-            {props.label}
-          </Text>
-          {props.caption ? (
-            <Text style={styles.caption}>{props.caption}</Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <View>
+            <Text
+              style={{
+                ...styles.menuText,
+                color: props.labelColor ? props.labelColor : 'black',
+              }}>
+              {props.label}
+            </Text>
+            {props.caption ? (
+              <Text style={styles.caption}>{props.caption}</Text>
+            ) : null}
+          </View>
+          {props.onPress ? (
+            <Icon name="angle-right" size={24} color="gray" />
           ) : null}
+          {props.rightIcon ? props.rightIcon : null}
         </View>
       ) : (
         <LoadingSpinner />
