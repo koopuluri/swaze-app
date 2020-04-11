@@ -114,6 +114,9 @@ class Session extends Component {
         <View style={styles.topSection}>
           <Text style={styles.title}>{session.title}</Text>
           <Text style={styles.startTime}>{session.startTime}</Text>
+          <Text style={styles.duration}>
+            {session.duration ? session.duration + ' minutes' : 'No duration'}
+          </Text>
           <Text style={styles.price}>
             {'$' +
               session.price +
@@ -150,6 +153,13 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: 'white',
     paddingBottom: 60,
+  },
+
+  duration: {
+    textAlign: 'center',
+    marginBottom: 20,
+    fontSize: 20,
+    opacity: 0.5,
   },
 
   topSection: {

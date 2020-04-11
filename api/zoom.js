@@ -3,20 +3,28 @@ const BASE_URL = 'https://us-central1-swaze-d8f83.cloudfunctions.net/';
 
 import axios from 'axios';
 
-export async function createZoomMeeting(userToken, title, startTime) {
+export async function createZoomMeeting(userToken, title, startTime, duration) {
   return await axios.post(BASE_URL + 'zoomMeeting', {
     userToken: userToken,
     title: title,
     startTime: startTime,
+    duration: duration,
   });
 }
 
-export async function editZoomMeeting(userToken, meetingId, title, startTime) {
+export async function editZoomMeeting(
+  userToken,
+  meetingId,
+  title,
+  startTime,
+  duration,
+) {
   return await axios.patch(BASE_URL + 'zoomMeeting', {
     userToken: userToken,
     meetingId: meetingId,
     title: title,
     startTime: startTime,
+    duration: duration,
   });
 }
 

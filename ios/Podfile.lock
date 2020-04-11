@@ -1,4 +1,5 @@
 PODS:
+  - AKPickerView (0.2.7)
   - boost-for-react-native (1.63.0)
   - CocoaAsyncSocket (7.6.4)
   - CocoaLibEvent (1.0.0)
@@ -300,6 +301,9 @@ PODS:
     - React
   - RNGestureHandler (1.6.1):
     - React
+  - RNNumberSelector (1.0.1):
+    - AKPickerView
+    - React
   - RNReanimated (1.7.1):
     - React
   - RNScreens (2.4.0):
@@ -311,6 +315,7 @@ PODS:
     - Yoga (~> 1.14)
 
 DEPENDENCIES:
+  - AKPickerView (from `https://github.com/prscX/AKPickerView.git`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
@@ -347,6 +352,7 @@ DEPENDENCIES:
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNNumberSelector (from `../node_modules/react-native-number-selector/ios`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
@@ -368,6 +374,8 @@ SPEC REPOS:
     - YogaKit
 
 EXTERNAL SOURCES:
+  AKPickerView:
+    :git: https://github.com/prscX/AKPickerView.git
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   FBLazyVector:
@@ -424,6 +432,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/datetimepicker"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNNumberSelector:
+    :path: "../node_modules/react-native-number-selector/ios"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -433,7 +443,13 @@ EXTERNAL SOURCES:
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
+CHECKOUT OPTIONS:
+  AKPickerView:
+    :commit: 2b4283040dbacb1322f8033f87b8120e7aace1be
+    :git: https://github.com/prscX/AKPickerView.git
+
 SPEC CHECKSUMS:
+  AKPickerView: 125372e36fcc372216127600a541f14dcdbb7993
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
   CocoaLibEvent: 2fab71b8bd46dd33ddb959f7928ec5909f838e3f
@@ -473,12 +489,13 @@ SPEC CHECKSUMS:
   RNCMaskedView: 90dd32f5b786bd562e876e1421ea77c700cbf71e
   RNDateTimePicker: f654c60568209005a3d9a5a6c4bff0c7094ec527
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
+  RNNumberSelector: 40a41822b3b00cbc2387aeab02d57066590b09cd
   RNReanimated: 4e102df74a9674fa943e05f97f3362b6e44d0b48
   RNScreens: b5c0e1b2b04512919e78bd3898e144a157ce2363
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   Yoga: 9db9ff2025ad21d1ac0a8b3c85d5ac4e7c29d525
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: a72253bc4b6457caa6371c5048220a105fcf091d
+PODFILE CHECKSUM: a02a1c96b6de694c6740750e9e192dfe064726da
 
 COCOAPODS: 1.9.1

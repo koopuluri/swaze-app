@@ -55,6 +55,8 @@ target 'Swaze' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
+  pod 'AKPickerView', :git => 'https://github.com/prscX/AKPickerView.git'
+  pod 'RNNumberSelector', :path => '../node_modules/react-native-number-selector/ios'
 
   target 'SwazeTests' do
     inherit! :complete

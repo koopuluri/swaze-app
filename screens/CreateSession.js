@@ -11,11 +11,13 @@ import {createZoomMeeting, editZoomMeeting} from '../api/zoom';
 import {ScrollView} from 'react-native-gesture-handler';
 import SettingsListItem from '../components/SettingsListItem';
 import {getHumanReadableDateString, getCurrentTimeZone} from '../UTIL';
+import {RNNumberSelector} from 'react-native-number-selector';
 
 class CreateSession extends Component {
   state = {
     title: '',
     description: '',
+    duration: 0,
     price: 5,
     startTime: 0,
     isLoading: false,
@@ -31,6 +33,7 @@ class CreateSession extends Component {
     let {route, isEditMode, db} = this.props;
     if (isEditMode) {
       let id = route.params.id;
+
       // pull the session from FireStore:
       this.setState({isPageLoading: true});
       let doc = await db
@@ -46,18 +49,20 @@ class CreateSession extends Component {
         startTime: new Date(session.startTime.seconds * 1000),
         price: session.price,
         totalAttendees: session.totalAttendees,
+        duration: session.duration,
       });
     }
   };
 
   validate = () => {
     let errors = {};
-    let {title, description, startTime} = this.state;
+    let {title, description, startTime, duration} = this.state;
     if (!title) errors.title = 'Please choose a title.';
     if (!description)
       errors.description = 'Please describe your class to your audience.';
     if (!startTime)
       errors.startTime = 'Please pick a valid start time for your session';
+    if (duration === 0) errors.duration = 'Please pick a session duration.';
     this.setState({errors: errors});
   };
 
@@ -68,15 +73,20 @@ class CreateSession extends Component {
 
   create = async () => {
     // Creating a session in FireStore:
-    let {title, description, startTime, price} = this.state;
-    if (title && description && startTime) {
+    let {title, description, startTime, price, duration} = this.state;
+    if (title && description && startTime && duration > 0) {
       this.validate();
       // submit it:
       let {db, user, navigation, firebase} = this.props;
       try {
         this.setState({isLoading: true});
         let userToken = await firebase.auth().currentUser.getIdToken(true);
-        let resp = await createZoomMeeting(userToken, title, startTime);
+        let resp = await createZoomMeeting(
+          userToken,
+          title,
+          startTime,
+          duration,
+        );
         let zoomMeetingId = resp.data.id;
         await db.collection('sessions').add({
           creatorId: user.id,
@@ -85,6 +95,7 @@ class CreateSession extends Component {
           startTime: startTime,
           price: price,
           totalAttendees: 0,
+          duration: duration,
           totalMoney: 0,
           zoomMeetingId: zoomMeetingId,
         });
@@ -98,33 +109,47 @@ class CreateSession extends Component {
   };
 
   save = async () => {
-    let {title, description, startTime, price, zoomMeetingId} = this.state;
+    let {
+      title,
+      description,
+      startTime,
+      price,
+      zoomMeetingId,
+      duration,
+    } = this.state;
     let {db, navigation, route, firebase} = this.props;
-    try {
-      this.setState({isLoading: true});
-      let userToken = await firebase.auth().currentUser.getIdToken(true);
-      let resp = await editZoomMeeting(
-        userToken,
-        zoomMeetingId,
-        title,
-        startTime,
-      );
-      console.log('zoom meeting edited successfully: ', resp.data.id);
-      await db
-        .collection('sessions')
-        .doc(route.params.id)
-        .set(
-          {
-            title: title,
-            description: description,
-            startTime: startTime,
-            price: price,
-          },
-          {merge: true},
+
+    if (title && description && startTime && duration > 0) {
+      try {
+        this.setState({isLoading: true});
+        let userToken = await firebase.auth().currentUser.getIdToken(true);
+        let resp = await editZoomMeeting(
+          userToken,
+          zoomMeetingId,
+          title,
+          startTime,
+          duration,
         );
-      navigation.navigate('Session');
-    } catch (e) {
-      console.log('error saving: ', e);
+        console.log('zoom meeting edited successfully: ', resp.data.id);
+        await db
+          .collection('sessions')
+          .doc(route.params.id)
+          .set(
+            {
+              title: title,
+              description: description,
+              startTime: startTime,
+              price: price,
+              duration: duration,
+            },
+            {merge: true},
+          );
+        navigation.navigate('Session');
+      } catch (e) {
+        console.log('error saving: ', e);
+      }
+    } else {
+      this.validate();
     }
   };
 
@@ -139,6 +164,7 @@ class CreateSession extends Component {
       isPageLoading,
       isLoading,
       totalAttendees,
+      duration,
     } = this.state;
 
     let {isEditMode} = this.props;
@@ -198,6 +224,32 @@ class CreateSession extends Component {
         </View>
 
         <View style={styles.formSection}>
+          <Text style={styles.title}>Duration (minutes) </Text>
+          <RNNumberSelector
+            style={{
+              left: 0,
+              height: 50,
+              backgroundColor: 'white',
+              borderRadius: 8,
+              marginLeft: 10,
+              marginRight: 10,
+              marginTop: 10,
+            }}
+            items={DURATIONS_LIST}
+            selectedItem={duration ? DURATION_MAP[duration.toString()] : 1}
+            spacing={50}
+            highlightedFontSize={30}
+            fontSize={20}
+            textColor={'#345345'}
+            highlightedTextColor={'#550E8D'}
+            viewAnimation={0}
+            onChange={duration => {
+              this.setState({duration});
+            }}
+          />
+        </View>
+
+        <View style={styles.formSection}>
           <Text style={styles.title}>Description</Text>
           <TextInput
             style={styles.input}
@@ -248,6 +300,12 @@ class CreateSession extends Component {
   }
 }
 
+const DURATIONS_LIST = [30, 40, 50, 60, 70, 80, 90, 100, 110, 150];
+let DURATION_MAP = {};
+for (var i = 0; i < DURATIONS_LIST.length; i++) {
+  DURATION_MAP[DURATIONS_LIST[i].toString()] = i;
+}
+
 const styles = StyleSheet.create({
   input: {
     borderColor: 'white',
@@ -276,7 +334,8 @@ const styles = StyleSheet.create({
     fontSize: 64,
     marginLeft: 'auto',
     marginRight: 'auto',
-    color: 'green',
+    fontWeight: '700',
+    color: '#550E8D',
   },
   sectionHeader: {
     padding: 10,
