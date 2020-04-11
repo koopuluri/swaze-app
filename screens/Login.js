@@ -29,22 +29,12 @@ class LoginPage extends Component {
       <LinearGradient
         colors={['#191B53', '#550E8D']}
         style={styles.linearGradient}>
-        <View style={{paddingTop: 100, height: '100%'}}>
-          <Logo color="white" style={{marginBottom: 30}} />
+        <View style={{paddingTop: '60%', height: '100%'}}>
+          <Logo color="#FBEE54" style={{marginBottom: 30}} />
           <Text style={styles.line}>
             Swaze makes it easy to monetize your Zoom sessions.
           </Text>
-          <Text style={styles.line}>
-            1. Pick a price and schedule your session in Swaze and have a Zoom
-            meeting for your session automagically created.{' '}
-          </Text>
-          <Text style={styles.line}>
-            2. Share your session link with your audience.
-          </Text>
-          <Text style={styles.line}>
-            3. When someone pays through your link, they're automatically added
-            to your Zoom meeting. Receive 93% of the transaction, we keep 7%.
-          </Text>
+
           <Text style={styles.line}>
             Keep track of all your sessions, who attended and finances in Swaze.
           </Text>
@@ -56,7 +46,7 @@ class LoginPage extends Component {
               Get it here.
             </Text>
           </Text>
-          <View style={{position: 'absolute', bottom: 50, width: '100%'}}>
+          <View style={{marginTop: 30, width: '100%'}}>
             <Button
               title="Log in with Zoom"
               onPress={() =>

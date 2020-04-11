@@ -7,7 +7,7 @@ export default function Logo(props) {
       <Text
         style={{
           ...props.style,
-          fontSize: 42,
+          fontSize: 48,
           textAlign: 'center',
           fontStyle: 'italic',
           fontWeight: '600',
