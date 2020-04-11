@@ -55,6 +55,7 @@ class Home extends Component {
         />
         <View style={styles.sectionListContainer}>
           <SectionList
+            contentContainerStyle={{paddingBottom: 300}}
             sections={[
               {title: 'Upcoming', data: this.state.upcoming},
               {title: 'Completed', data: this.state.past},

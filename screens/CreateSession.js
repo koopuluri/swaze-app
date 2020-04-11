@@ -8,6 +8,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import CONSTANTS from '../CONSTANTS';
 
 import {createZoomMeeting, editZoomMeeting} from '../api/zoom';
+import {ScrollView} from 'react-native-gesture-handler';
 
 class CreateSession extends Component {
   state = {
@@ -144,10 +145,13 @@ class CreateSession extends Component {
 
     if (isPageLoading) return <LoadingSpinner />;
     return (
-      <View style={styles.container}>
+      <ScrollView
+        contentContainerStyle={{paddingBottom: 50}}
+        style={styles.container}>
         <View style={styles.formSection}>
           <Text style={styles.title}>Title</Text>
           <TextInput
+            style={styles.input}
             onChangeText={title => this.setState({title})}
             value={title}
             placeholder="My dance class"
@@ -180,6 +184,7 @@ class CreateSession extends Component {
         <View style={styles.formSection}>
           <Text style={styles.title}>Description</Text>
           <TextInput
+            style={styles.input}
             value={description}
             onChangeText={description => this.setState({description})}
             multiline={true}
@@ -222,12 +227,16 @@ class CreateSession extends Component {
         ) : (
           <LoadingSpinner />
         )}
-      </View>
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  input: {
+    borderColor: 'white',
+    borderWidth: 0,
+  },
   priceMessage: {
     marginLeft: 10,
     marginTop: 5,
@@ -235,7 +244,7 @@ const styles = StyleSheet.create({
   container: {
     height: '100%',
     padding: 20,
-    backgroundColor: 'white',
+    backgroundColor: '#F1F2F6',
   },
   formSection: {
     marginTop: 20,
@@ -244,7 +253,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     marginLeft: 10,
-    fontWeight: 'bold',
+    fontWeight: '400',
+    color: '#4E0C6D',
   },
   price: {
     fontSize: 64,

@@ -36,8 +36,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     borderRadius: 8,
-    borderColor: '#d3d3d3',
+    borderWidth: 0,
+    backgroundColor: 'white',
     textAlignVertical: 'top',
+    fontSize: 16,
   },
   errorMessage: {
     color: 'red',

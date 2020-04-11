@@ -7,7 +7,7 @@ import moment from 'moment';
 import AttendeeList from '../components/AttendeeList';
 
 import {getUrlForSession} from '../UTIL';
-import {TouchableHighlight} from 'react-native-gesture-handler';
+import {TouchableHighlight, ScrollView} from 'react-native-gesture-handler';
 
 import {deleteZoomMeeting} from '../api/zoom';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -107,7 +107,9 @@ class Session extends Component {
     if (isLoading) return <LoadingSpinner />;
     if (!session) return null;
     return (
-      <View style={styles.container}>
+      <ScrollView
+        contentContainerStyle={{paddingBottom: 50}}
+        style={styles.container}>
         {error ? <Text>{error}</Text> : null}
         <View style={styles.topSection}>
           <Text style={styles.title}>{session.title}</Text>
@@ -136,7 +138,7 @@ class Session extends Component {
             padding={7}
           />
         ) : null}
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -147,6 +149,7 @@ const styles = StyleSheet.create({
     padding: 20,
     height: '100%',
     backgroundColor: 'white',
+    paddingBottom: 60,
   },
 
   topSection: {
