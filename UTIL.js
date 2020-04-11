@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export function getQueryStringParams(query) {
   return query
     ? (/^[?#]/.test(query) ? query.slice(1) : query)
@@ -14,6 +16,14 @@ export function getQueryStringParams(query) {
 
 export function getUrlForSession(sessionId) {
   return 'https://www.swaze.app/' + sessionId;
+}
+
+export function getHumanReadableDateString(date) {
+  return moment(date).format('MMMM D, h:mm a');
+}
+
+export function getCurrentTimeZone() {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
 }
 
 export function getStripeConnectAuthUrl(userToken) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {TouchableHighlight} from 'react-native-gesture-handler';
-import moment from 'moment';
+import {getHumanReadableDateString} from '../UTIL';
 
 export default function SessionListItem(props) {
   let {session} = props;
@@ -22,8 +22,8 @@ export default function SessionListItem(props) {
         <View style={styles.row}>
           <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
             <Text style={styles.startTime}>
-              {moment(new Date(session.startTime.seconds * 1000)).format(
-                'MMMM D, h:mm a',
+              {getHumanReadableDateString(
+                new Date(session.startTime.seconds * 1000),
               )}
             </Text>
             <Text style={styles.price}>{'for $' + session.price}</Text>

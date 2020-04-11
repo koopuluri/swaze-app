@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   menuText: {fontSize: 16, fontWeight: 'bold', paddingRight: 10},
-  caption: {marginTop: 3, fontSize: 14, opacity: 0.7},
+  caption: {marginTop: 3, fontSize: 14, opacity: 0.7, paddingRight: 10},
   settingsMenuItem: {
     padding: 10,
     borderBottomWidth: 1,
