@@ -24,6 +24,7 @@ class Button extends Component {
             ? {width: 0, height: 0}
             : {width: 4, height: 4},
           padding: props.padding ? props.padding : 20,
+          ...props.style,
         }}
         onPress={props.onPress}>
         <Text

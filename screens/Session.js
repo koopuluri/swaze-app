@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 
-import {View, Text, StyleSheet, Clipboard, Button} from 'react-native';
+import {View, Text, StyleSheet, Clipboard} from 'react-native';
+import Button from '../components/Button';
 import LoadingSpinner from '../components/LoadingSpinner';
 import moment from 'moment';
 import AttendeeList from '../components/AttendeeList';
@@ -9,6 +10,7 @@ import {getUrlForSession} from '../UTIL';
 import {TouchableHighlight} from 'react-native-gesture-handler';
 
 import {deleteZoomMeeting} from '../api/zoom';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 class Session extends Component {
   state = {
@@ -54,11 +56,19 @@ class Session extends Component {
         }}
         underlayColor="#d3d3d3"
         style={styles.url}>
-        {!copied ? (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
           <Text style={styles.urlText}>{url}</Text>
-        ) : (
-          <Text style={{textAlign: 'center'}}>Copied url!</Text>
-        )}
+          {!copied ? (
+            <Icon name="copy" size={24} color="gray" />
+          ) : (
+            <Icon name="check-circle" size={24} color="#00cc00" />
+          )}
+        </View>
       </TouchableHighlight>
     );
   };
@@ -121,7 +131,9 @@ class Session extends Component {
           <Button
             onPress={this.delete}
             title="Delete this session"
-            color="red"
+            backgroundColor="red"
+            textColor="white"
+            padding={7}
           />
         ) : null}
       </View>
@@ -155,7 +167,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   urlText: {
-    fontSize: 14,
+    fontSize: 15,
     opacity: 0.7,
   },
 

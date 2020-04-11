@@ -49,29 +49,32 @@ class Home extends Component {
     return (
       <View style={styles.container}>
         <Button
+          style={{marginTop: 60}}
           title="Create Session"
           onPress={() => this.props.navigation.navigate('Create Session')}
         />
-        <SectionList
-          sections={[
-            {title: 'Upcoming', data: this.state.upcoming},
-            {title: 'Completed', data: this.state.past},
-          ]}
-          renderItem={sesh => (
-            <SessionListItem
-              onPress={() => {
-                this.props.navigation.navigate('Session', {id: sesh.item.id});
-              }}
-              session={sesh.item.data()}
-            />
-          )}
-          renderSectionHeader={({section}) => (
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionHeaderText}>{section.title}</Text>
-            </View>
-          )}
-          keyExtractor={(item, index) => index}
-        />
+        <View style={styles.sectionListContainer}>
+          <SectionList
+            sections={[
+              {title: 'Upcoming', data: this.state.upcoming},
+              {title: 'Completed', data: this.state.past},
+            ]}
+            renderItem={sesh => (
+              <SessionListItem
+                onPress={() => {
+                  this.props.navigation.navigate('Session', {id: sesh.item.id});
+                }}
+                session={sesh.item.data()}
+              />
+            )}
+            renderSectionHeader={({section}) => (
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionHeaderText}>{section.title}</Text>
+              </View>
+            )}
+            keyExtractor={(item, index) => index}
+          />
+        </View>
       </View>
     );
   }
@@ -88,6 +91,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: 'white',
   },
+  sectionListContainer: {},
 });
 
 export default Home;

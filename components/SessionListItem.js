@@ -44,24 +44,28 @@ const styles = StyleSheet.create({
   startTime: {
     marginRight: 5,
     color: 'gray',
-    fontWeight: '600',
+    fontWeight: '400',
   },
   price: {color: 'gray'},
   totalMoney: {
     color: 'green',
-    fontWeight: 'bold',
+    fontWeight: '400',
   },
   attendees: {
     color: 'gray',
   },
 
   container: {
-    padding: 18,
+    padding: 20,
+    paddingTop: 15,
+    paddingBottom: 15,
     borderBottomColor: '#e8e8e8',
     borderBottomWidth: 1,
   },
   title: {
-    fontWeight: 'bold',
+    fontWeight: '600',
     opacity: 0.8,
+    fontSize: 16,
+    color: '#4E0C6D',
   },
 });
