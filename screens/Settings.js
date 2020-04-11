@@ -9,6 +9,7 @@ import Link from '../components/Link';
 import CONSTANTS from '../CONSTANTS';
 import {getStripeConnectAuthUrl} from '../UTIL';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import SettingsListItem from '../components/SettingsListItem';
 
 class Settings extends Component {
   state = {
@@ -191,56 +192,15 @@ class Settings extends Component {
   }
 }
 
-function SettingsListItem(props) {
-  return (
-    <TouchableHighlight
-      onPress={props.onPress}
-      underlayColor="#e8e8e8"
-      style={styles.settingsMenuItem}>
-      {!props.isLoading ? (
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <View>
-            <Text
-              style={{
-                ...styles.menuText,
-                color: props.labelColor ? props.labelColor : 'black',
-              }}>
-              {props.label}
-            </Text>
-            {props.caption ? (
-              <Text style={styles.caption}>{props.caption}</Text>
-            ) : null}
-          </View>
-          {props.onPress ? (
-            <Icon name="angle-right" size={24} color="gray" />
-          ) : null}
-          {props.rightIcon ? props.rightIcon : null}
-        </View>
-      ) : (
-        <LoadingSpinner />
-      )}
-    </TouchableHighlight>
-  );
-}
-
 const styles = StyleSheet.create({
   settingsContainer: {
     height: '100%',
     backgroundColor: 'white',
+    padding: 10,
     paddingTop: 40,
   },
   menuText: {fontSize: 16, fontWeight: 'bold'},
   caption: {marginTop: 3, fontSize: 14, opacity: 0.7},
-  settingsMenuItem: {
-    padding: 20,
-    borderBottomWidth: 1,
-    borderColor: '#e8e8e8',
-  },
 });
 
 export default Settings;

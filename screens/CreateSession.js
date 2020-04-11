@@ -9,6 +9,9 @@ import CONSTANTS from '../CONSTANTS';
 
 import {createZoomMeeting, editZoomMeeting} from '../api/zoom';
 import {ScrollView} from 'react-native-gesture-handler';
+import SessionListItem from '../components/SessionListItem';
+import {Icon} from 'native-base';
+import SettingsListItem from '../components/SettingsListItem';
 
 class CreateSession extends Component {
   state = {
@@ -163,14 +166,15 @@ class CreateSession extends Component {
         <View style={styles.formSection}>
           <Text style={styles.title}>Start time</Text>
           {
-            <Button
-              title={startTime ? startTime.toString() : 'select start time'}
+            <SettingsListItem
+              label={startTime ? startTime.toString() : 'select start time'}
               onPress={() => this.setState({isDatePickerVisible: true})}
             />
           }
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
             mode="datetime"
+            minimumDate={new Date()}
             onConfirm={val => {
               this.setState({startTime: val, isDatePickerVisible: false});
             }}
@@ -260,6 +264,7 @@ const styles = StyleSheet.create({
     fontSize: 64,
     marginLeft: 'auto',
     marginRight: 'auto',
+    color: 'green',
   },
   sectionHeader: {
     padding: 10,
