@@ -113,7 +113,7 @@ export default function MainNavigationContainer(props) {
             backgroundColor: '#550e8d',
           },
           headerRight: () => {
-            if (!currentUser.stripe_user_id) {
+            if (!currentUser.stripe || !currentUser.stripe.stripe_user_id) {
               return null;
             } else {
               return (

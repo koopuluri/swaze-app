@@ -72,12 +72,14 @@ class Home extends Component {
     return (
       <View style={styles.container}>
         <Button
-          disabled={!user.stripe_user_id}
+          disabled={!user.stripe || !user.stripe.stripe_user_id}
           style={{marginTop: 60}}
           title="Create Session"
           onPress={() => this.props.navigation.navigate('Create Session')}
         />
-        {!user.stripe_user_id ? this.getBankErrorMessage() : null}
+        {!user.stripe || !user.stripe.stripe_user_id
+          ? this.getBankErrorMessage()
+          : null}
         <View style={styles.sectionListContainer}>
           <SectionList
             contentContainerStyle={{paddingBottom: 300}}
