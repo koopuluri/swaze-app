@@ -1,5 +1,11 @@
 import React, {Component} from 'react';
-import {View, Text, SectionList, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  SectionList,
+  StyleSheet,
+  TouchableHighlight,
+} from 'react-native';
 import Button from '../components/Button';
 import SessionListItem from '../components/SessionListItem';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -43,16 +49,35 @@ class Home extends Component {
     if (this.state.unsubscribeListener) this.state.unsubscribeListener();
   }
 
+  getBankErrorMessage = () => {
+    return (
+      <Text
+        style={{
+          fontSize: 16,
+          color: 'red',
+          textAlign: 'center',
+          paddingLeft: 20,
+          paddingRight: 20,
+        }}>
+        Please connect your card in settings to be able to create sessions and
+        accept money from viewers.{' '}
+      </Text>
+    );
+  };
+
   render() {
-    if (!this.props.user) return null;
+    let {user} = this.props;
+    if (!user) return null;
     if (this.state.isLoading) return <LoadingSpinner />;
     return (
       <View style={styles.container}>
         <Button
+          disabled={!user.stripe_user_id}
           style={{marginTop: 60}}
           title="Create Session"
           onPress={() => this.props.navigation.navigate('Create Session')}
         />
+        {!user.stripe_user_id ? this.getBankErrorMessage() : null}
         <View style={styles.sectionListContainer}>
           <SectionList
             contentContainerStyle={{paddingBottom: 300}}

@@ -112,17 +112,23 @@ export default function MainNavigationContainer(props) {
           headerStyle: {
             backgroundColor: '#550e8d',
           },
-          headerRight: () => (
-            <Icon
-              onPress={() =>
-                navigation.navigate('Edit Session', {id: route.params.id})
-              }
-              name="pencil-square-o"
-              size={24}
-              color="white"
-              style={{marginRight: 20, padding: 10}}
-            />
-          ),
+          headerRight: () => {
+            if (!currentUser.stripe_user_id) {
+              return null;
+            } else {
+              return (
+                <Icon
+                  onPress={() =>
+                    navigation.navigate('Edit Session', {id: route.params.id})
+                  }
+                  name="pencil-square-o"
+                  size={24}
+                  color="white"
+                  style={{marginRight: 20, padding: 10}}
+                />
+              );
+            }
+          },
           headerLeft: () => (
             <Icon
               onPress={() => navigation.pop()}

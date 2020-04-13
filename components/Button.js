@@ -11,6 +11,19 @@ class Button extends Component {
     let backgroundColor = props.backgroundColor
       ? props.backgroundColor
       : styles.container.backgroundColor;
+    let onPress = props.onPress;
+    let textColor = props.textColor ? props.textColor : styles.label.color;
+
+    let shadowOffset = this.state.isTouched
+      ? {width: 0, height: 0}
+      : {width: 4, height: 4};
+
+    if (props.disabled) {
+      onPress = null;
+      backgroundColor = '#e8e8e8';
+      textColor = 'darkgray';
+      shadowOffset = {width: 0, height: 0};
+    }
     return (
       <TouchableHighlight
         underlayColor={props.underlayColor ? props.underlayColor : '#fbee54'}
@@ -20,17 +33,15 @@ class Button extends Component {
         style={{
           ...styles.container,
           backgroundColor: backgroundColor,
-          shadowOffset: this.state.isTouched
-            ? {width: 0, height: 0}
-            : {width: 4, height: 4},
+          shadowOffset: shadowOffset,
           padding: props.padding ? props.padding : 20,
           ...props.style,
         }}
-        onPress={props.onPress}>
+        onPress={onPress}>
         <Text
           style={{
             ...styles.label,
-            color: props.textColor ? props.textColor : styles.label.color,
+            color: textColor,
           }}>
           {props.title}
         </Text>
