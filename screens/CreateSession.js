@@ -1,6 +1,6 @@
 import React, {Component, useState} from 'react';
 
-import {View, Text, Slider, Button, StyleSheet} from 'react-native';
+import {View, Text, Slider, Button, StyleSheet, Picker} from 'react-native';
 import SwazeButton from '../components/Button';
 import TextInput from '../components/TextInput';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -11,13 +11,13 @@ import {createZoomMeeting, editZoomMeeting} from '../api/zoom';
 import {ScrollView} from 'react-native-gesture-handler';
 import SettingsListItem from '../components/SettingsListItem';
 import {getHumanReadableDateString, getCurrentTimeZone} from '../UTIL';
-import {RNNumberSelector} from 'react-native-number-selector';
+import RBSheet from 'react-native-raw-bottom-sheet';
 
 class CreateSession extends Component {
   state = {
     title: '',
     description: '',
-    duration: 0,
+    duration: 30,
     price: 5,
     startTime: 0,
     isLoading: false,
@@ -188,8 +188,7 @@ class CreateSession extends Component {
           />
         </View>
 
-        <View style={styles.formSection}>
-          <Text style={styles.title}>Start time</Text>
+        <View style={{...styles.formSection, margin: -10, marginTop: -10}}>
           {
             <SettingsListItem
               label={
@@ -220,34 +219,34 @@ class CreateSession extends Component {
             onCancel={() => this.setState({isDatePickerVisible: false})}
           />
           {errors.startTime ? (
-            <Text style={styles.errorMessage}>{errors.startTime}</Text>
+            <Text
+              style={{...styles.errorMessage, marginLeft: 10, marginRight: 10}}>
+              {errors.startTime}
+            </Text>
           ) : null}
-        </View>
-
-        <View style={styles.formSection}>
-          <Text style={styles.title}>Duration (minutes) </Text>
-          <RNNumberSelector
-            style={{
-              left: 0,
-              height: 40,
-              backgroundColor: 'white',
-              borderRadius: 8,
-              marginLeft: 10,
-              marginRight: 10,
-              marginTop: 10,
-            }}
-            items={DURATIONS_LIST}
-            selectedItem={duration ? DURATION_MAP[duration.toString()] : 1}
-            spacing={50}
-            highlightedFontSize={30}
-            fontSize={20}
-            textColor={'#345345'}
-            highlightedTextColor={'#550E8D'}
-            viewAnimation={0}
-            onChange={duration => {
-              this.setState({duration});
-            }}
+          <SettingsListItem
+            label={duration > 0 ? duration + ' minutes' : 'No duration'}
+            onPress={() => this.RBSheet.open()}
           />
+          <RBSheet
+            ref={ref => {
+              this.RBSheet = ref;
+            }}
+            height={200}
+            duration={250}
+            customStyles={{height: 300}}>
+            <Picker
+              style={{height: 300}}
+              selectedValue={duration}
+              onValueChange={itemValue => this.setState({duration: itemValue})}>
+              <Picker.Item label="30 minutes" value={30} />
+              <Picker.Item label="60 minutes" value={60} />
+              <Picker.Item label="90 minutes" value={90} />
+              <Picker.Item label="2 hours" value={120} />
+              <Picker.Item label="3 hours" value={180} />
+              <Picker.Item label="4 hours" value={240} />
+            </Picker>
+          </RBSheet>
         </View>
 
         <View style={styles.formSection}>
@@ -284,7 +283,7 @@ class CreateSession extends Component {
             }}
             minimumTrackTintColor="#1fb28a"
             maximumTrackTintColor="#d3d3d3"
-            thumbTintColor="#b9e4c9"
+            thumbTintColor="#27DB94"
           />
           <Text style={styles.price}>${price}</Text>
         </View>
