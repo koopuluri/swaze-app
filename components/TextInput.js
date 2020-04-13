@@ -8,6 +8,7 @@ export default function MyTextInput(props) {
       {props.title ? <Text style={styles.title}>{props.title}</Text> : null}
       <TextInput
         {...props}
+        placeholderTextColor="#d3d3d3"
         style={styles.input}
         numberOfLines={Platform.OS === 'ios' ? null : props.numberOfLines}
         minHeight={
@@ -37,6 +38,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     borderWidth: 0,
+    color: 'black',
     backgroundColor: 'white',
     textAlignVertical: 'top',
     fontSize: 16,

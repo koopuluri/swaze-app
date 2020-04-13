@@ -59,7 +59,7 @@ export default function MainNavigationContainer(props) {
       <MainStack.Screen
         name="Home"
         options={({navigation, route}) => ({
-          title: 'SWAZE',
+          title: 'SWAZE PAY',
           headerRight: () => (
             <Icon
               onPress={() => navigation.navigate('settings')}

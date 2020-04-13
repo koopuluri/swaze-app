@@ -209,6 +209,7 @@ class CreateSession extends Component {
             />
           }
           <DateTimePickerModal
+            textColor="black"
             isVisible={isDatePickerVisible}
             mode="datetime"
             date={startTime ? startTime : new Date()}

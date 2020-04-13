@@ -13,7 +13,7 @@ export default function Logo(props) {
           fontWeight: '600',
           color: props.color ? props.color : '#550E8D',
         }}>
-        SWAZE
+        SWAZE PAY
       </Text>
     </View>
   );
