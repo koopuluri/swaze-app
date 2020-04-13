@@ -54,7 +54,7 @@ class LoginPage extends Component {
               title="Log in with Zoom"
               onPress={() =>
                 Linking.openURL(
-                  'https://zoom.us/oauth/authorize?response_type=code&client_id=uIGn9r5kQIem2e7b2c81fQ&redirect_uri=https%3A%2F%2Fus-central1-swaze-d8f83.cloudfunctions.net%2FauthorizeRedirect',
+                  'https://zoom.us/oauth/authorize?response_type=code&client_id=8qWk9IAHS7yzOMwh5WGVGQ&redirect_uri=https%3A%2F%2Fus-central1-swaze-d8f83.cloudfunctions.net%2FauthorizeRedirect',
                 )
               }
             />

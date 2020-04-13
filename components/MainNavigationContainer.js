@@ -157,7 +157,7 @@ export default function MainNavigationContainer(props) {
         <RootStack.Screen
           name="Create Session"
           options={({navigation, route}) => ({
-            title: 'Create',
+            title: 'Create session',
             headerLeft: () => (
               <Icon
                 onPress={() => navigation.pop()}
