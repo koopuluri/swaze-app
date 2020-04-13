@@ -10,6 +10,7 @@ import React, {Component} from 'react';
 import {View, Button, Linking, ActivityIndicator} from 'react-native';
 import LoginPage from './screens/Login';
 import MainNavigationContainer from './components/MainNavigationContainer';
+import PushNotificationsManager from './PushNotificationsManager';
 
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
@@ -124,12 +125,14 @@ class App extends Component {
     if (this.state.isLoading) return <LoadingSpinner />;
 
     return (
-      <MainNavigationContainer
-        logout={this.logout}
-        currentUser={this.state.currentUser}
-        firebase={firebase}
-        db={db}
-      />
+      <PushNotificationsManager>
+        <MainNavigationContainer
+          logout={this.logout}
+          currentUser={this.state.currentUser}
+          firebase={firebase}
+          db={db}
+        />
+      </PushNotificationsManager>
     );
   }
 }
