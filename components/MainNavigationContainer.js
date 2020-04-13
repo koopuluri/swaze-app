@@ -66,7 +66,7 @@ export default function MainNavigationContainer(props) {
               name="cog"
               size={24}
               color="white"
-              style={{marginRight: 20}}
+              style={{marginRight: 20, padding: 10}}
             />
           ),
           headerStyle: {
@@ -91,7 +91,7 @@ export default function MainNavigationContainer(props) {
               name="chevron-left"
               size={20}
               color="black"
-              style={{marginLeft: 20}}
+              style={{marginLeft: 20, padding: 10}}
             />
           ),
         })}>
@@ -120,7 +120,7 @@ export default function MainNavigationContainer(props) {
               name="pencil-square-o"
               size={24}
               color="white"
-              style={{marginRight: 20}}
+              style={{marginRight: 20, padding: 10}}
             />
           ),
           headerLeft: () => (
@@ -129,7 +129,7 @@ export default function MainNavigationContainer(props) {
               name="chevron-left"
               size={20}
               color="white"
-              style={{marginLeft: 20}}
+              style={{marginLeft: 20, padding: 10}}
             />
           ),
         })}>
@@ -158,7 +158,7 @@ export default function MainNavigationContainer(props) {
                 name="chevron-left"
                 size={20}
                 color="gray"
-                style={{marginLeft: 20}}
+                style={{marginLeft: 20, padding: 10}}
               />
             ),
           })}>
@@ -182,7 +182,7 @@ export default function MainNavigationContainer(props) {
                 name="chevron-left"
                 size={20}
                 color="gray"
-                style={{marginLeft: 20}}
+                style={{marginLeft: 20, padding: 10}}
               />
             ),
           })}>
