@@ -32,13 +32,16 @@ class LoginPage extends Component {
         <View style={{paddingTop: '60%', height: '100%'}}>
           <Logo color="#FBEE54" style={{marginBottom: 30}} />
           <Text style={styles.line}>
-            Swaze makes it easy to monetize your Zoom sessions.
+            Charge viewers and efficiently manage Zoom classes.
           </Text>
 
-          <Text style={styles.line}>
-            Keep track of all your sessions, who attended and finances in Swaze.
-          </Text>
-          <Text style={{...styles.line, fontWeight: 'bold', opacity: 1.0}}>
+          <Text
+            style={{
+              ...styles.line,
+              fontWeight: 'bold',
+              opacity: 1.0,
+              fontSize: 14,
+            }}>
             {text}
             <Text
               style={{color: 'lightblue', textDecorationLine: 'underline'}}
@@ -59,6 +62,9 @@ class LoginPage extends Component {
               style={{
                 ...styles.line,
                 textDecorationLine: 'underline',
+                fontSize: 13,
+                textAlign: 'center',
+                marginTop: -10,
               }}
               onPress={() =>
                 Linking.openURL(
@@ -77,6 +83,7 @@ class LoginPage extends Component {
 const styles = StyleSheet.create({
   line: {
     fontSize: 18,
+    textAlign: 'center',
     color: 'white',
     fontWeight: '500',
     paddingLeft: 20,

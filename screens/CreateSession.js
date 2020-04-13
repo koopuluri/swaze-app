@@ -228,7 +228,7 @@ class CreateSession extends Component {
           <RNNumberSelector
             style={{
               left: 0,
-              height: 50,
+              height: 40,
               backgroundColor: 'white',
               borderRadius: 8,
               marginLeft: 10,
@@ -264,7 +264,7 @@ class CreateSession extends Component {
         </View>
 
         <View style={styles.formSection}>
-          <Text style={styles.title}>Session price</Text>
+          <Text style={styles.title}>Price to join</Text>
           {!canChangePrice ? (
             <Text style={styles.priceMessage}>
               An attendee has already signed up, therefore you can't change the
