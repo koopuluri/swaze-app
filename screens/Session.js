@@ -56,18 +56,31 @@ class Session extends Component {
         }}
         underlayColor="#d3d3d3"
         style={styles.url}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <Text style={styles.urlText}>{url}</Text>
-          {!copied ? (
-            <Icon name="copy" size={24} color="gray" />
-          ) : (
-            <Icon name="check-circle" size={24} color="#00cc00" />
-          )}
+        <View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <Text style={styles.urlText}>{url}</Text>
+            {!copied ? (
+              <Icon name="copy" size={24} color="gray" />
+            ) : (
+              <Icon name="check-circle" size={24} color="#00cc00" />
+            )}
+          </View>
+          {copied ? (
+            <Text
+              style={{
+                marginTop: 10,
+                fontSize: 13,
+                opacity: 0.4,
+              }}>
+              Url copied to clipboard! Share with your audience so they can pay
+              to join this session.
+            </Text>
+          ) : null}
         </View>
       </TouchableHighlight>
     );
@@ -180,7 +193,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   urlText: {
-    fontSize: 15,
+    fontSize: 16,
+    fontWeight: 'bold',
     opacity: 0.7,
   },
 
