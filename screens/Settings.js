@@ -64,7 +64,7 @@ class Settings extends Component {
                   await db
                     .collection('users')
                     .doc(user.id)
-                    .set({
+                    .update({
                       firstName: name.firstName,
                       lastName: name.lastName,
                     });
@@ -158,12 +158,19 @@ class Settings extends Component {
     let {user, logout} = this.props;
     let {isNameModalOpen} = this.state;
     return (
-      <ScrollView style={styles.settingsContainer}>
+      <ScrollView
+        contentContainerStyle={{paddingBottom: 100}}
+        style={styles.settingsContainer}>
         <SettingsListItem
           label={user.firstName + ' ' + user.lastName}
           onPress={() => this.setState({isNameModalOpen: true})}
         />
         {this.getConnectBankRow()}
+        <SettingsListItem
+          label="Give us feedback!"
+          labelColor="black"
+          onPress={() => Linking.openURL('mailto:karthik@swaze.app')}
+        />
         <SettingsListItem
           label="Log out"
           labelColor="red"
@@ -171,6 +178,34 @@ class Settings extends Component {
           onPress={() => logout()}
         />
         <View style={{marginTop: 30, padding: 20}}>
+          <Text style={{...styles.lineText, fontWeight: 'bold'}}>
+            How SwazePay works:
+          </Text>
+          <Text style={styles.lineText}>Login with your Zoom PRO account.</Text>
+          <Text style={styles.lineText}>
+            Connect your card so that when your audience pays to join your
+            session, that money can be deposited into your account.
+          </Text>
+          <Text style={styles.lineText}>
+            Create a session and set a price to it.
+          </Text>
+          <Text style={styles.lineText}>
+            Share the url with your audience. When someone pays through the
+            link, they will automatically be added to your Zoom meeting and will
+            be sent the Zoom meeting details.{' '}
+            <Text
+              style={{...styles.lineText, opacity: 1.0, fontWeight: 'bold'}}>
+              You don't have to do anything else on your part!
+            </Text>
+          </Text>
+          <Text style={styles.lineText}>
+            You will be notified in Swaze Pay when someone has paid and joined
+            your session.
+          </Text>
+          <Text style={styles.lineText}>
+            We're happy to answer any questions you have. Reach us through the
+            link below. Thanks!
+          </Text>
           <Link
             style={{marginBottom: 10}}
             name="Terms and conditions"
@@ -198,6 +233,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 10,
     paddingTop: 40,
+  },
+  lineText: {
+    fontSize: 16,
+    marginBottom: 10,
+    opacity: 0.7,
   },
   menuText: {fontSize: 16, fontWeight: 'bold'},
   caption: {marginTop: 3, fontSize: 14, opacity: 0.7},

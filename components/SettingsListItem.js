@@ -15,7 +15,7 @@ export default function SettingsListItem(props) {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <View>
+          <View style={{width: '80%'}}>
             <Text
               style={{
                 ...styles.menuText,
@@ -27,10 +27,13 @@ export default function SettingsListItem(props) {
               <Text style={styles.caption}>{props.caption}</Text>
             ) : null}
           </View>
+
+          <View style={styles.iconContainer}>
+            {props.rightIcon ? props.rightIcon : null}
+          </View>
           {props.onPress ? (
             <Icon name="angle-right" size={24} color="gray" />
           ) : null}
-          {props.rightIcon ? props.rightIcon : null}
         </View>
       ) : (
         <LoadingSpinner />
@@ -40,16 +43,20 @@ export default function SettingsListItem(props) {
 }
 
 const styles = StyleSheet.create({
+  iconContainer: {
+    marginRight: 15,
+  },
   settingsContainer: {
     height: '100%',
     backgroundColor: 'white',
     paddingTop: 40,
   },
-  menuText: {fontSize: 16, fontWeight: 'bold', paddingRight: 10},
-  caption: {marginTop: 3, fontSize: 14, opacity: 0.7, paddingRight: 10},
+  menuText: {fontSize: 16, fontWeight: 'bold'},
+  caption: {marginTop: 3, fontSize: 14, opacity: 0.7},
   settingsMenuItem: {
-    padding: 10,
     borderBottomWidth: 1,
     borderColor: '#e8e8e8',
+    width: '100%',
+    padding: 20,
   },
 });

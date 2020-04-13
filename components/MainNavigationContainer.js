@@ -84,6 +84,7 @@ export default function MainNavigationContainer(props) {
         name="settings"
         path="settings"
         options={({navigation, route}) => ({
+          title: 'Settings',
           headerLeft: () => (
             <Icon
               onPress={() => navigation.pop()}
