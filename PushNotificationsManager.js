@@ -11,8 +11,9 @@ export default class PushNotificationManager extends React.Component {
   registerDevice = () => {
     Notifications.events().registerRemoteNotificationsRegistered(event => {
       // TODO: Send the token to my server so it could send back push notifications...
-      console.log('Device Token Received', event.deviceToken);
+      this.props.onDeviceTokenReceived(event.deviceToken);
     });
+
     Notifications.events().registerRemoteNotificationsRegistrationFailed(
       event => {
         console.error(event);
@@ -27,18 +28,36 @@ export default class PushNotificationManager extends React.Component {
       (notification, completion) => {
         console.log('Notification Received - Foreground', notification);
         // Calling completion on iOS with `alert: true` will present the native iOS inApp notification.
-        completion({alert: false, sound: false, badge: false});
+        completion({alert: true, sound: true, badge: true});
       },
     );
 
     Notifications.events().registerNotificationOpened(
       (notification, completion) => {
-        console.log('Notification opened by device user', notification);
-        console.log(
-          `Notification opened with an action identifier: ${
-            notification.identifier
-          }`,
-        );
+        // console.log('Notification opened by device user', notification);
+        // console.log(
+        //   `Notification opened with an action identifier: ${
+        //     notification.identifier
+        //   }`,
+        // );
+
+        // let whatNotificationLooksLike = {
+        //   identifier: '392ECAFB-29BC-43EC-A9C2-C83FF5E2DC78',
+        //   payload: {
+        //     aps: {alert: [Object]},
+        //     body: "Bob Marley joined 'Raghav's dance session.' for $5",
+        //     category: '',
+        //     date: '2020-04-15T03:29:24.996+05:30',
+        //     identifier: '392ECAFB-29BC-43EC-A9C2-C83FF5E2DC78',
+        //     sessionId: 'zVE3Pt8mqegfBpc4rOi6',
+        //     thread: '',
+        //     title: 'New attendee!',
+        //   },
+        // };
+
+        let sessionId = notification.payload.sessionId;
+        console.log('Got the notification! ', notification);
+        if (sessionId) this.props.navigateToSession(sessionId);
         completion();
       },
     );
@@ -55,6 +74,10 @@ export default class PushNotificationManager extends React.Component {
     Notifications.getInitialNotification()
       .then(notification => {
         console.log('Initial notification was:', notification || 'N/A');
+        if (notification && notification.payload) {
+          let sessionId = notification.payload.sessionId;
+          if (sessionId) this.props.navigateToSession(sessionId, true);
+        }
       })
       .catch(err => console.error('getInitialNotifiation() failed', err));
   };

@@ -10,10 +10,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const MainStack = createStackNavigator();
 const RootStack = createStackNavigator();
 
-export default function MainNavigationContainer(props) {
-  const ref = React.useRef();
-
-  const {getInitialState} = useLinking(ref, {
+let MainNavigationContainer = props => {
+  const {getInitialState} = useLinking(props.forwardedRef, {
     prefixes: ['com.swaze://'],
     config: {
       Main: {
@@ -147,7 +145,7 @@ export default function MainNavigationContainer(props) {
   );
 
   return (
-    <NavigationContainer initialState={initialState} ref={ref}>
+    <NavigationContainer initialState={initialState} ref={props.forwardedRef}>
       <RootStack.Navigator mode="modal">
         <RootStack.Screen
           name="Main"
@@ -205,4 +203,8 @@ export default function MainNavigationContainer(props) {
       </RootStack.Navigator>
     </NavigationContainer>
   );
-}
+};
+
+export default React.forwardRef((props, ref) => {
+  return <MainNavigationContainer {...props} forwardedRef={ref} />;
+});

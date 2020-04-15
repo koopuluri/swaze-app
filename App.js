@@ -55,6 +55,11 @@ class App extends Component {
     unsubscribe: null,
   };
 
+  constructor(props) {
+    super(props);
+    this.navigationRef = React.createRef();
+  }
+
   fetchAndSetCurrentUser = async () => {
     db = firebase.firestore();
     let id = firebase.auth().currentUser.uid;
@@ -109,6 +114,37 @@ class App extends Component {
     }
   };
 
+  onDeviceTokenReceived = async token => {
+    let {currentUser} = this.state;
+    if (currentUser) {
+      if (!currentUser.deviceToken || currentUser.deviceToken !== token) {
+        db = firebase.firestore();
+        let userId = firebase.auth().currentUser.uid;
+        await db
+          .collection('users')
+          .doc(userId)
+          .update({deviceToken: token});
+      }
+    }
+  };
+
+  navigate = (name, params, isInitial) => {
+    if (isInitial) {
+      // setting timeout to give us a delay before we navigate to screen.
+      // This is only used if app is started up when notification pressed.
+      // Otherwise, the navigationRef isn't set and no navigation happens.
+      // TODO: MAKE THIS MORE ROBUST: follow the instructions in:
+      // https://reactnavigation.org/docs/navigating-without-navigation-prop/
+      // to handle Initialization in a much better way.
+      return setTimeout(
+        () => this.navigationRef.current?.navigate(name, params),
+        1000,
+      );
+    }
+
+    this.navigationRef.current?.navigate(name, params);
+  };
+
   render() {
     let {currentUser} = this.state;
     if (!currentUser)
@@ -125,8 +161,13 @@ class App extends Component {
     if (this.state.isLoading) return <LoadingSpinner />;
 
     return (
-      <PushNotificationsManager>
+      <PushNotificationsManager
+        onDeviceTokenReceived={this.onDeviceTokenReceived}
+        navigateToSession={(id, isInitial) =>
+          this.navigate('Session', {id: id}, isInitial)
+        }>
         <MainNavigationContainer
+          ref={this.navigationRef}
           logout={this.logout}
           currentUser={this.state.currentUser}
           firebase={firebase}
