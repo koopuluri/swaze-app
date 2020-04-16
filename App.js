@@ -7,7 +7,13 @@
  */
 
 import React, {Component} from 'react';
-import {View, Button, Linking, ActivityIndicator} from 'react-native';
+import {
+  View,
+  Button,
+  Linking,
+  ActivityIndicator,
+  StatusBar,
+} from 'react-native';
 import LoginPage from './screens/Login';
 import MainNavigationContainer from './components/MainNavigationContainer';
 import PushNotificationsManager from './PushNotificationsManager';
@@ -85,6 +91,8 @@ class App extends Component {
   };
 
   componentDidMount = async () => {
+    console.reportErrorsAsExceptions = false;
+    StatusBar.setBarStyle('light-content');
     firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         this.fetchAndSetCurrentUser();
@@ -96,11 +104,7 @@ class App extends Component {
   };
 
   signInWithCustomToken = async custom_token => {
-    try {
-      await firebase.auth().signInWithCustomToken(custom_token);
-    } catch (e) {
-      console.log('error signing in with custom token: ', e);
-    }
+    await firebase.auth().signInWithCustomToken(custom_token);
   };
 
   logout = async () => {
@@ -153,7 +157,6 @@ class App extends Component {
           signInWithCustomToken={async token =>
             firebase.auth().signInWithCustomToken(token)
           }
-          completeSignIn={this.completeSignIn}
         />
       );
 

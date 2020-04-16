@@ -83,15 +83,22 @@ let MainNavigationContainer = props => {
         path="settings"
         options={({navigation, route}) => ({
           title: 'Settings',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            color: 'white',
+          },
           headerLeft: () => (
             <Icon
               onPress={() => navigation.pop()}
               name="chevron-left"
               size={20}
-              color="black"
+              color="white"
               style={{marginLeft: 20, padding: 10}}
             />
           ),
+          headerStyle: {
+            backgroundColor: '#550e8d',
+          },
         })}>
         {props => (
           <Settings
@@ -106,7 +113,11 @@ let MainNavigationContainer = props => {
       <MainStack.Screen
         name="Session"
         options={({navigation, route}) => ({
-          title: '',
+          title: 'Your session',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            color: 'white',
+          },
           headerStyle: {
             backgroundColor: '#550e8d',
           },
@@ -156,12 +167,19 @@ let MainNavigationContainer = props => {
           name="Create Session"
           options={({navigation, route}) => ({
             title: 'Create session',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              color: '#550e8d',
+            },
+            headerStyle: {
+              backgroundColor: '#FBEE54',
+            },
             headerLeft: () => (
               <Icon
                 onPress={() => navigation.pop()}
                 name="chevron-left"
                 size={20}
-                color="gray"
+                color="#550e8d"
                 style={{marginLeft: 20, padding: 10}}
               />
             ),
@@ -178,14 +196,20 @@ let MainNavigationContainer = props => {
         <RootStack.Screen
           name="Edit Session"
           options={({navigation, route}) => ({
-            title: 'Edit',
-
+            title: 'Edit session',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              color: '#550e8d',
+            },
+            headerStyle: {
+              backgroundColor: '#FBEE54',
+            },
             headerLeft: () => (
               <Icon
                 onPress={() => navigation.pop()}
                 name="chevron-left"
                 size={20}
-                color="gray"
+                color="#550e8d"
                 style={{marginLeft: 20, padding: 10}}
               />
             ),

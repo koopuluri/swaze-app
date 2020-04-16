@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, Linking} from 'react-native';
-import {ScrollView, TouchableHighlight} from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 import Modal from '../components/Modal';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
@@ -20,6 +20,7 @@ class Settings extends Component {
     },
     errors: {},
   };
+
   getNameEditForm = () => {
     let {name, isNameModalLoading, errors} = this.state;
     let {db, user} = this.props;
@@ -124,7 +125,7 @@ class Settings extends Component {
         );
       } else {
         message =
-          'Contact us if you wish to change anything about your account.';
+          'Your payments for each session will be deposited into your account after the session is held. Please feel free to reach out with any questions you may have, or if you would like to change your account details.';
         label = 'Account successfully connected';
         rightIcon = (
           <Icon
@@ -202,15 +203,26 @@ class Settings extends Component {
             You will be notified in Swaze Pay when someone has paid and joined
             your session.
           </Text>
-          <Text style={styles.lineText}>
+          <Text style={{...styles.lineText, marginBottom: 30}}>
             We're happy to answer any questions you have. Reach us through the
             link below. Thanks!
           </Text>
           <Link
             style={{marginBottom: 10}}
             name="Terms and conditions"
-            url="https://www.notion.so/Swaze-app-terms-conditions-2c4bc9f2405f46618102f12a27b7f613"
+            url="https://www.notion.so/Swaze-Terms-and-Conditions-5d1a07172aab4bba830eb6731fb59356"
           />
+          <Link
+            style={{marginBottom: 10}}
+            name="Privacy policy"
+            url="https://www.notion.so/Swaze-Privacy-Policy-8faeb852b0694f528cc45aa2f31d79d3"
+          />
+          <Link
+            style={{marginBottom: 10}}
+            name="Frequently asked questions"
+            url="https://www.notion.so/Swaze-Frequently-asked-questions-9087251964784d00a1b7e1db4b22f629"
+          />
+
           <Link
             name="Need help? Email us at support@swaze.app"
             url="mailto:support@swaze.app"

@@ -5,6 +5,7 @@ import {
   SectionList,
   StyleSheet,
   TouchableHighlight,
+  StatusBar,
 } from 'react-native';
 import Button from '../components/Button';
 import SessionListItem from '../components/SessionListItem';
