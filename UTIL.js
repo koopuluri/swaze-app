@@ -1,5 +1,7 @@
 import moment from 'moment';
 
+const SESSION_WEB_DOMAIN = 'https://session.swaze.app/';
+
 export function getQueryStringParams(query) {
   return query
     ? (/^[?#]/.test(query) ? query.slice(1) : query)
@@ -15,7 +17,7 @@ export function getQueryStringParams(query) {
 }
 
 export function getUrlForSession(sessionId) {
-  return 'https://www.swaze.app/' + sessionId;
+  return SESSION_WEB_DOMAIN + sessionId;
 }
 
 export function getHumanReadableDateString(date) {
