@@ -197,7 +197,7 @@ class CreateSession extends Component {
                     ' (' +
                     getCurrentTimeZone() +
                     ')'
-                  : 'select start time'
+                  : 'Select start time'
               }
               caption={
                 isEditMode
@@ -225,7 +225,11 @@ class CreateSession extends Component {
             </Text>
           ) : null}
           <SettingsListItem
-            label={duration > 0 ? duration + ' minutes' : 'No duration'}
+            label={
+              duration > 0
+                ? 'Duration: ' + duration + ' minutes'
+                : 'No duration'
+            }
             onPress={() => this.RBSheet.open()}
           />
           <RBSheet

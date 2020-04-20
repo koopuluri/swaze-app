@@ -6,30 +6,14 @@ import {getQueryStringParams} from '../UTIL';
 import Logo from '../components/Logo';
 import LinearGradient from 'react-native-linear-gradient';
 import LoadingSpinner from '../components/LoadingSpinner';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
 
 class LoginPage extends Component {
   state = {
     isLoading: false,
     errorMessage: '',
   };
-  componentDidMount = async () => {
-    Linking.addEventListener('url', async event => {
-      let {access_token, refresh_token, custom_token} = getQueryStringParams(
-        event.url,
-      );
-
-      // log this user in with Firebase using the custom_token:
-      try {
-        this.setState({isLoading: true});
-        await this.props.signInWithCustomToken(custom_token);
-      } catch (e) {
-        this.setState({
-          isLoading: false,
-          errorMessage: 'There was an error logging in. Please try again.',
-        });
-      }
-    });
-  };
+  componentDidMount = async () => {};
 
   renderButton = () => {
     let {errorMessage, isLoading} = this.state;
@@ -39,11 +23,36 @@ class LoginPage extends Component {
       <View>
         <Button
           title="Log in with Zoom"
-          onPress={() =>
-            Linking.openURL(
+          onPress={async () => {
+            let resp = await InAppBrowser.openAuth(
               'https://zoom.us/oauth/authorize?response_type=code&client_id=8qWk9IAHS7yzOMwh5WGVGQ&redirect_uri=https%3A%2F%2Fus-central1-swaze-d8f83.cloudfunctions.net%2FauthorizeRedirect',
-            )
-          }
+            );
+            if (resp.type === 'success') {
+              let {
+                access_token,
+                refresh_token,
+                custom_token,
+              } = getQueryStringParams(resp.url);
+
+              // log this user in with Firebase using the custom_token:
+              try {
+                this.setState({isLoading: true});
+                await this.props.signInWithCustomToken(custom_token);
+              } catch (e) {
+                this.setState({
+                  isLoading: false,
+                  errorMessage:
+                    'There was an error logging in. Please try again.',
+                });
+              }
+            } else {
+              this.setState({
+                isLoading: false,
+                errorMessage:
+                  'There was an error logging in. Please try again.',
+              });
+            }
+          }}
         />
         {errorMessage ? (
           <Text

@@ -115,6 +115,7 @@ const styles = StyleSheet.create({
   },
   sectionHeader: {
     padding: 10,
+    display: 'none',
   },
   sectionHeaderText: {
     fontSize: 24,

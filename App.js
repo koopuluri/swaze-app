@@ -92,7 +92,7 @@ class App extends Component {
 
   componentDidMount = async () => {
     console.reportErrorsAsExceptions = false;
-    StatusBar.setBarStyle('light-content');
+    StatusBar.setBarStyle('dark-content');
     firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         this.fetchAndSetCurrentUser();

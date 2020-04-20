@@ -52,6 +52,11 @@ let MainNavigationContainer = props => {
 
   let {db, currentUser, logout, firebase} = props;
 
+  const COLORS = {
+    main: '#550e8d',
+    gray: '#989898',
+  };
+
   let MainStackComponent = () => (
     <MainStack.Navigator uriPrefix="com.swaze://">
       <MainStack.Screen
@@ -63,17 +68,17 @@ let MainNavigationContainer = props => {
               onPress={() => navigation.navigate('settings')}
               name="cog"
               size={24}
-              color="white"
+              color={COLORS.gray}
               style={{marginRight: 20, padding: 10}}
             />
           ),
           headerStyle: {
-            backgroundColor: '#550e8d',
+            backgroundColor: 'white',
           },
           headerTitleStyle: {
             fontWeight: 'bold',
             fontStyle: 'italic',
-            color: 'white',
+            color: COLORS.main,
           },
         })}>
         {props => <Home {...props} db={db} user={currentUser} />}
@@ -85,19 +90,19 @@ let MainNavigationContainer = props => {
           title: 'Settings',
           headerTitleStyle: {
             fontWeight: 'bold',
-            color: 'white',
+            color: COLORS.main,
           },
           headerLeft: () => (
             <Icon
               onPress={() => navigation.pop()}
               name="chevron-left"
               size={20}
-              color="white"
+              color={COLORS.gray}
               style={{marginLeft: 20, padding: 10}}
             />
           ),
           headerStyle: {
-            backgroundColor: '#550e8d',
+            backgroundColor: 'white',
           },
         })}>
         {props => (
@@ -116,10 +121,10 @@ let MainNavigationContainer = props => {
           title: 'Your session',
           headerTitleStyle: {
             fontWeight: 'bold',
-            color: 'white',
+            color: COLORS.main,
           },
           headerStyle: {
-            backgroundColor: '#550e8d',
+            backgroundColor: 'white',
           },
           headerRight: () => {
             if (!currentUser.stripe || !currentUser.stripe.stripe_user_id) {
@@ -132,7 +137,7 @@ let MainNavigationContainer = props => {
                   }
                   name="pencil-square-o"
                   size={24}
-                  color="white"
+                  color={COLORS.gray}
                   style={{marginRight: 20, padding: 10}}
                 />
               );
@@ -143,7 +148,7 @@ let MainNavigationContainer = props => {
               onPress={() => navigation.pop()}
               name="chevron-left"
               size={20}
-              color="white"
+              color={COLORS.gray}
               style={{marginLeft: 20, padding: 10}}
             />
           ),
@@ -169,17 +174,17 @@ let MainNavigationContainer = props => {
             title: 'Create session',
             headerTitleStyle: {
               fontWeight: 'bold',
-              color: '#550e8d',
+              color: COLORS.main,
             },
             headerStyle: {
-              backgroundColor: '#FBEE54',
+              backgroundColor: 'white',
             },
             headerLeft: () => (
               <Icon
                 onPress={() => navigation.pop()}
                 name="chevron-left"
                 size={20}
-                color="#550e8d"
+                color={COLORS.gray}
                 style={{marginLeft: 20, padding: 10}}
               />
             ),
@@ -199,17 +204,17 @@ let MainNavigationContainer = props => {
             title: 'Edit session',
             headerTitleStyle: {
               fontWeight: 'bold',
-              color: '#550e8d',
+              color: COLORS.main,
             },
             headerStyle: {
-              backgroundColor: '#FBEE54',
+              backgroundColor: 'white',
             },
             headerLeft: () => (
               <Icon
                 onPress={() => navigation.pop()}
                 name="chevron-left"
                 size={20}
-                color="#550e8d"
+                color={COLORS.gray}
                 style={{marginLeft: 20, padding: 10}}
               />
             ),
