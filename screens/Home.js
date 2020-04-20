@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableHighlight,
   StatusBar,
+  SafeAreaView,
 } from 'react-native';
 import Button from '../components/Button';
 import SessionListItem from '../components/SessionListItem';
@@ -32,12 +33,12 @@ class Home extends Component {
             let data = doc.data();
             let now = new Date() / 1000;
             if (data.startTime.seconds < now) {
-              past.push(doc);
+              past.unshift(doc);
             } else {
-              upcoming.push(doc);
+              upcoming.unshift(doc);
             }
           });
-          this.setState({past: past, upcoming: upcoming, isLoading: false});
+          this.setState({past: past, upcoming, isLoading: false});
         },
         error => {
           if (this.state.unsubscribeListener) this.state.unsubscribeListener();
@@ -71,19 +72,19 @@ class Home extends Component {
     if (!user) return null;
     if (this.state.isLoading) return <LoadingSpinner />;
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container} flex={1}>
         <Button
           disabled={!user.stripe || !user.stripe.stripe_user_id}
-          style={{marginTop: 60}}
+          style={{marginTop: 20}}
           title="Create Session"
           onPress={() => this.props.navigation.navigate('Create Session')}
         />
         {!user.stripe || !user.stripe.stripe_user_id
           ? this.getBankErrorMessage()
           : null}
-        <View style={styles.sectionListContainer}>
+        <View style={{...styles.sectionListContainer, flex: 1}}>
           <SectionList
-            contentContainerStyle={{paddingBottom: 300}}
+            stickySectionHeadersEnabled={false}
             sections={[
               {title: 'Upcoming', data: this.state.upcoming},
               {title: 'Completed', data: this.state.past},
@@ -96,15 +97,27 @@ class Home extends Component {
                 session={sesh.item.data()}
               />
             )}
-            renderSectionHeader={({section}) => (
-              <View style={styles.sectionHeader}>
-                <Text style={styles.sectionHeaderText}>{section.title}</Text>
-              </View>
-            )}
+            renderSectionHeader={({section}) => {
+              if (
+                section.title === 'Upcoming' &&
+                (!this.state.upcoming || this.state.upcoming.length === 0)
+              )
+                return null;
+              if (
+                section.title === 'Completed' &&
+                (!this.state.past || this.state.upcoming.length === 0)
+              )
+                return null;
+              return (
+                <View style={{...styles.sectionHeader, marginTop: 20}}>
+                  <Text style={styles.sectionHeaderText}>{section.title}</Text>
+                </View>
+              );
+            }}
             keyExtractor={(item, index) => index}
           />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -112,14 +125,17 @@ class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
+    flex: 1,
   },
   sectionHeader: {
     padding: 10,
-    display: 'none',
   },
   sectionHeaderText: {
     fontSize: 24,
-    color: 'white',
+    color: 'black',
+    opacity: 0.9,
+    fontWeight: '600',
+    marginLeft: 10,
   },
   sectionListContainer: {},
 });
